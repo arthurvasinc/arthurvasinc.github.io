@@ -1,87 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page with Vega-Lite Chart</title>
-    
+    <title>Kiberbiztonsági Jelentés - Projekt Kezdemény</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
             color: #333;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
         }
-
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
             background-color: #ffffff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
-
         h1, h2 {
-            color: #005a9c;
+            color: #004085; /* Sötétkék a főcímeknek */
             text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-        
-        /* Style for the div that will hold our chart */
-        #vis {
+        p {
+            font-size: 1.1em;
+            text-align: justify;
+        }
+        .vis-container {
             width: 100%;
+            margin-bottom: 40px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
+            padding: 10px;
         }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-
 </head>
 <body>
 
     <div class="container">
-        <h1>Welcome to My Page! 🚀</h1>
+        <h1>Interaktív Kiberbiztonsági Műszerfal</h1>
         <p>
-            This page now includes a data visualization powered by Vega-Lite. The bar chart below is rendered using JavaScript.
+            Üdvözöljük a vállalati kiberbiztonsági jelentés bemutató oldalán! Az alábbi interaktív vizualizációk célja, hogy gyors és áttekinthető képet adjanak a minket érintő legfontosabb digitális fenyegetésekről, azok időbeli trendjeiről és eredetéről.
         </p>
 
-        <h2>Sample Sales Data</h2>
+        <h2>Leggyakoribb Támadási Típusok</h2>
+        <p>Az első diagram a leggyakrabban előforduló incidenseket mutatja. Vigye az egeret az oszlopok fölé a pontos esetszám megtekintéséhez.</p>
+        <div id="vis1" class="vis-container"></div>
 
-        <div id="vis"></div>
+        <h2>Incidensek Számának Alakulása Havi Bontásban</h2>
+        <p>A második vizualizáció egy vonaldiagramon ábrázolja a regisztrált biztonsági incidensek számának alakulását az elmúlt fél évben. Az interaktív tooltip segít a havi adatok leolvasásában.</p>
+        <div id="vis2" class="vis-container"></div>
+
+        <h2>Támadások Forrása Típusonként</h2>
+        <p>Ez a halmozott oszlopdiagram mélyebb betekintést nyújt, megmutatva, hogy az egyes támadási típusok milyen arányban származnak külső, belső vagy partneri forrásból.</p>
+        <div id="vis3" class="vis-container"></div>
     </div>
 
     <script type="text/javascript">
-      // This is the Vega-Lite specification in JSON format
-      const spec = {
+
+      // --- 1. Oszlopdiagram: Támadási típusok ---
+      const spec1 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "A simple bar chart with embedded data.",
+        "description": "Leggyakoribb támadási típusok.",
+        "width": "container",
         "data": {
           "values": [
-            {"category": "A", "amount": 28},
-            {"category": "B", "amount": 55},
-            {"category": "C", "amount": 43},
-            {"category": "D", "amount": 91},
-            {"category": "E", "amount": 81},
-            {"category": "F", "amount": 53},
-            {"category": "G", "amount": 19},
-            {"category": "H", "amount": 87}
+            {"tipus": "Adathalászat (Phishing)", "esetszam": 482},
+            {"tipus": "Rosszindulatú szoftver (Malware)", "esetszam": 275},
+            {"tipus": "Szolgáltatásmegtagadás (DDoS)", "esetszam": 120},
+            {"tipus": "Azonosságlopás", "esetszam": 95},
+            {"tipus": "Belső fenyegetés", "esetszam": 65}
           ]
         },
         "mark": "bar",
         "encoding": {
-          "x": {"field": "category", "type": "nominal", "axis": {"title": "Category"}},
-          "y": {"field": "amount", "type": "quantitative", "axis": {"title": "Amount"}}
+          "y": {"field": "tipus", "type": "nominal", "title": "Támadás Típusa", "sort": "-x"},
+          "x": {"field": "esetszam", "type": "quantitative", "title": "Esetszám"},
+          "tooltip": [
+            {"field": "tipus", "title": "Típus"},
+            {"field": "esetszam", "title": "Esetszám"}
+          ]
         }
       };
+      vegaEmbed('#vis1', spec1, {actions: false});
 
-      // Use the vegaEmbed function to draw the chart in the #vis div
-      vegaEmbed('#vis', spec, {actions: false});
+      // --- 2. Vonaldiagram: Havi trendek ---
+      const spec2 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Incidensek számának alakulása.",
+        "width": "container",
+        "data": {
+          "values": [
+            {"honap": "2025-04-01", "incidensek": 150},
+            {"honap": "2025-05-01", "incidensek": 180},
+            {"honap": "2025-06-01", "incidensek": 210},
+            {"honap": "2025-07-01", "incidensek": 190},
+            {"honap": "2025-08-01", "incidensek": 240},
+            {"honap": "2025-09-01", "incidensek": 260}
+          ]
+        },
+        "mark": {"type": "line", "point": true, "tooltip": true},
+        "encoding": {
+          "x": {"field": "honap", "type": "temporal", "timeUnit": "yearmonth", "title": "Hónap"},
+          "y": {"field": "incidensek", "type": "quantitative", "title": "Incidensek Száma"}
+        }
+      };
+      vegaEmbed('#vis2', spec2, {actions: false});
 
+      // --- 3. Halmozott Oszlopdiagram: Támadások forrása ---
+      const spec3 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Támadások forrása típusonként.",
+        "width": "container",
+        "data": {
+          "values": [
+            {"tipus": "Adathalászat", "forras": "Külső", "esetszam": 450},
+            {"tipus": "Adathalászat", "forras": "Belső (hiba)", "esetszam": 32},
+            {"tipus": "Rosszindulatú szoftver", "forras": "Külső", "esetszam": 260},
+            {"tipus": "Rosszindulatú szoftver", "forras": "Belső (hiba)", "esetszam": 15},
+            {"tipus": "Szolgáltatásmegtagadás", "forras": "Külső", "esetszam": 120},
+            {"tipus": "Azonosságlopás", "forras": "Külső", "esetszam": 80},
+            {"tipus": "Azonosságlopás", "forras": "Partner", "esetszam": 15},
+            {"tipus": "Belső fenyegetés", "forras": "Belső (szándékos)", "esetszam": 65}
+          ]
+        },
+        "mark": "bar",
+        "encoding": {
+          "y": {"field": "tipus", "type": "nominal", "title": "Támadás Típusa", "sort": "-x"},
+          "x": {"aggregate": "sum", "field": "esetszam", "title": "Összes esetszám"},
+          "color": {"field": "forras", "title": "Forrás"},
+          "tooltip": [
+            {"field": "tipus", "title": "Típus"},
+            {"field": "forras", "title": "Forrás"},
+            {"field": "esetszam", "title": "Esetszám"}
+          ]
+        }
+      };
+      vegaEmbed('#vis3', spec3, {actions: false});
     </script>
 
 </body>
