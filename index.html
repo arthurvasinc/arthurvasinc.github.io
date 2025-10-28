@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page with Vega-Lite Chart</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #005a9c;
+            text-align: center;
+        }
+        
+        /* Style for the div that will hold our chart */
+        #vis {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to My Page! 🚀</h1>
+        <p>
+            This page now includes a data visualization powered by Vega-Lite. The bar chart below is rendered using JavaScript.
+        </p>
+
+        <h2>Sample Sales Data</h2>
+
+        <div id="vis"></div>
+    </div>
+
+    <script type="text/javascript">
+      // This is the Vega-Lite specification in JSON format
+      const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "A simple bar chart with embedded data.",
+        "data": {
+          "values": [
+            {"category": "A", "amount": 28},
+            {"category": "B", "amount": 55},
+            {"category": "C", "amount": 43},
+            {"category": "D", "amount": 91},
+            {"category": "E", "amount": 81},
+            {"category": "F", "amount": 53},
+            {"category": "G", "amount": 19},
+            {"category": "H", "amount": 87}
+          ]
+        },
+        "mark": "bar",
+        "encoding": {
+          "x": {"field": "category", "type": "nominal", "axis": {"title": "Category"}},
+          "y": {"field": "amount", "type": "quantitative", "axis": {"title": "Amount"}}
+        }
+      };
+
+      // Use the vegaEmbed function to draw the chart in the #vis div
+      vegaEmbed('#vis', spec, {actions: false});
+
+    </script>
+
+</body>
+</html>
