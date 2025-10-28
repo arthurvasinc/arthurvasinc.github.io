@@ -3,43 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiberbiztonsági Jelentés - Projekt Kezdemény</title>
+    <title>Kiberbiztonsági Műszerfal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --main-bg: #ffffff;
+            --primary-text: #212529;
+            --secondary-text: #495057;
+            --accent-color: #007bff;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            line-height: 1.7;
             margin: 0;
             padding: 20px;
         }
+
+        .header {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 25px;
+            text-align: center;
+            background-color: var(--main-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .header p {
+            color: var(--secondary-text);
+            max-width: 700px;
+            margin: 15px auto 0;
+            font-size: 1.1em;
+        }
+
         .container {
             max-width: 900px;
             margin: auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
-        h1, h2 {
-            color: #004085; /* Sötétkék a főcímeknek */
-            text-align: center;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
+
+        .vis-card {
+            background-color: var(--main-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .vis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .vis-card h2 {
+            color: var(--primary-text);
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .vis-card p {
+            color: var(--secondary-text);
+            font-size: 1em;
+            text-align: left;
             margin-bottom: 20px;
         }
-        p {
-            font-size: 1.1em;
-            text-align: justify;
-        }
-        .vis-container {
+
+        #vis1, #vis2, #vis3 {
             width: 100%;
-            margin-bottom: 40px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
         }
+
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -47,25 +103,33 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
-
-    <div class="container">
+    
+    <header class="header">
         <h1>Interaktív Kiberbiztonsági Műszerfal</h1>
         <p>
-            Üdvözöljük a vállalati kiberbiztonsági jelentés bemutató oldalán! Az alábbi interaktív vizualizációk célja, hogy gyors és áttekinthető képet adjanak a minket érintő legfontosabb digitális fenyegetésekről, azok időbeli trendjeiről és eredetéről.
+            Gyors és áttekinthető kép a minket érintő legfontosabb digitális fenyegetésekről, azok időbeli trendjeiről és eredetéről.
         </p>
+    </header>
 
-        <h2>Leggyakoribb Támadási Típusok</h2>
-        <p>Az első diagram a leggyakrabban előforduló incidenseket mutatja. Vigye az egeret az oszlopok fölé a pontos esetszám megtekintéséhez.</p>
-        <div id="vis1" class="vis-container"></div>
+    <main class="container">
+        <section class="vis-card">
+            <h2>Leggyakoribb Támadási Típusok</h2>
+            <p>A diagram a leggyakrabban előforduló incidenseket mutatja. Vigye az egeret az oszlopok fölé a pontos esetszám megtekintéséhez.</p>
+            <div id="vis1"></div>
+        </section>
 
-        <h2>Incidensek Számának Alakulása Havi Bontásban</h2>
-        <p>A második vizualizáció egy vonaldiagramon ábrázolja a regisztrált biztonsági incidensek számának alakulását az elmúlt fél évben. Az interaktív tooltip segít a havi adatok leolvasásában.</p>
-        <div id="vis2" class="vis-container"></div>
+        <section class="vis-card">
+            <h2>Incidensek Számának Alakulása Havi Bontásban</h2>
+            <p>Ez a vonaldiagram a regisztrált biztonsági incidensek számának alakulását ábrázolja az elmúlt fél évben. Az interaktív tooltip segít a havi adatok leolvasásában.</p>
+            <div id="vis2"></div>
+        </section>
 
-        <h2>Támadások Forrása Típusonként</h2>
-        <p>Ez a halmozott oszlopdiagram mélyebb betekintést nyújt, megmutatva, hogy az egyes támadási típusok milyen arányban származnak külső, belső vagy partneri forrásból.</p>
-        <div id="vis3" class="vis-container"></div>
-    </div>
+        <section class="vis-card">
+            <h2>Támadások Forrása Típusonként</h2>
+            <p>Ez a halmozott oszlopdiagram mélyebb betekintést nyújt, megmutatva, hogy az egyes támadási típusok milyen arányban származnak külső, belső vagy partneri forrásból.</p>
+            <div id="vis3"></div>
+        </section>
+    </main>
 
     <script type="text/javascript">
 
@@ -74,6 +138,7 @@
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
         "description": "Leggyakoribb támadási típusok.",
         "width": "container",
+        "height": 300,
         "data": {
           "values": [
             {"tipus": "Adathalászat (Phishing)", "esetszam": 482},
@@ -83,10 +148,11 @@
             {"tipus": "Belső fenyegetés", "esetszam": 65}
           ]
         },
-        "mark": "bar",
+        "mark": {"type": "bar", "cornerRadiusEnd": 4},
         "encoding": {
-          "y": {"field": "tipus", "type": "nominal", "title": "Támadás Típusa", "sort": "-x"},
+          "y": {"field": "tipus", "type": "nominal", "title": null, "sort": "-x"},
           "x": {"field": "esetszam", "type": "quantitative", "title": "Esetszám"},
+          "color": {"field": "tipus", "type": "nominal", "legend": null, "scale": {"scheme": "category10"}},
           "tooltip": [
             {"field": "tipus", "title": "Típus"},
             {"field": "esetszam", "title": "Esetszám"}
@@ -100,6 +166,7 @@
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
         "description": "Incidensek számának alakulása.",
         "width": "container",
+        "height": 300,
         "data": {
           "values": [
             {"honap": "2025-04-01", "incidensek": 150},
@@ -110,10 +177,10 @@
             {"honap": "2025-09-01", "incidensek": 260}
           ]
         },
-        "mark": {"type": "line", "point": true, "tooltip": true},
+        "mark": {"type": "line", "point": true, "tooltip": true, "strokeWidth": 3},
         "encoding": {
           "x": {"field": "honap", "type": "temporal", "timeUnit": "yearmonth", "title": "Hónap"},
-          "y": {"field": "incidensek", "type": "quantitative", "title": "Incidensek Száma"}
+          "y": {"field": "incidensek", "type": "quantitative", "title": "Incidensek Száma", "scale": {"zero": false}}
         }
       };
       vegaEmbed('#vis2', spec2, {actions: false});
@@ -123,6 +190,7 @@
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
         "description": "Támadások forrása típusonként.",
         "width": "container",
+        "height": 300,
         "data": {
           "values": [
             {"tipus": "Adathalászat", "forras": "Külső", "esetszam": 450},
@@ -137,9 +205,9 @@
         },
         "mark": "bar",
         "encoding": {
-          "y": {"field": "tipus", "type": "nominal", "title": "Támadás Típusa", "sort": "-x"},
+          "y": {"field": "tipus", "type": "nominal", "title": null, "sort": "-x"},
           "x": {"aggregate": "sum", "field": "esetszam", "title": "Összes esetszám"},
-          "color": {"field": "forras", "title": "Forrás"},
+          "color": {"field": "forras", "title": "Forrás", "scale": {"scheme": "tableau10"}},
           "tooltip": [
             {"field": "tipus", "title": "Típus"},
             {"field": "forras", "title": "Forrás"},
