@@ -45,7 +45,6 @@
             background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0b1120 100%);
             padding: 20px;
             border-bottom: 1px solid var(--grid-line);
-            position: relative;
         }
 
         h1 { 
@@ -108,13 +107,22 @@
             background: var(--bg-card);
             border: 1px solid var(--grid-line);
             border-radius: 16px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            /* Fontos: flexbox, hogy a tartalom kitöltse */
+            display: flex;
+            justify-content: center;
         }
 
-        .vega-actions { display: none; }
+        /* Vega Embed Stílus javítás */
+        .vega-embed {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .vega-actions { display: none !important; }
 
-        /* --- RECOMMENDATIONS (THE ENDING) --- */
+        /* --- RECOMMENDATIONS --- */
         .conclusion-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -131,10 +139,8 @@
 
         .action-card h3 { margin-top: 0; font-size: 1.3rem; }
         .action-card p { color: var(--text-muted); font-size: 0.95rem; }
-        
         .action-icon { font-size: 2rem; margin-bottom: 15px; display: block; }
 
-        /* Footer */
         footer {
             padding: 60px 20px;
             text-align: center;
@@ -152,7 +158,6 @@
             cursor: pointer;
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-
     </style>
 </head>
 <body>
@@ -175,7 +180,6 @@
                 <div class="kpi-lbl">Legtöbb Kockázat</div>
             </div>
         </div>
-
         <div class="scroll-down">↓</div>
     </header>
 
@@ -186,7 +190,7 @@
             <br><span style="color: var(--accent)">Használat:</span> Jelöljön ki egy időszakot a felső diagramon (húzás bal gombbal)!
         </p>
         
-        <div class="viz-wrapper" id="viz-main" style="min-height: 600px;"></div>
+        <div class="viz-wrapper" id="viz-main"></div>
     </section>
 
     <section class="story-section">
@@ -195,16 +199,12 @@
                 <h2 class="section-title" style="border-color: var(--danger);">2. Támadói Mintázatok</h2>
                 <p class="section-desc" style="padding-left: 0; margin-left: 20px;">
                     A Heatmap elemzés rávilágít, hogy a támadások <strong>munkaidőben (09:00 - 17:00)</strong> koncentrálódnak.
-                    Ez megerősíti a gyanút, hogy a hackerek a dolgozók figyelmetlenségére építenek (Social Engineering).
-                    <br><br>
-                    <em>Vigye az egeret a négyzetek fölé a részletekért!</em>
                 </p>
             </div>
             <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border: 1px dashed var(--grid-line);">
                 <code style="color: #10b981; font-family: 'JetBrains Mono'">
                     >> ANALYZING PATTERNS...<br>
                     >> DETECTED: HIGH ACTIVITY @ 14:00<br>
-                    >> ORIGIN: HUMAN FACTOR<br>
                     >> STATUS: CONFIRMED
                 </code>
             </div>
@@ -214,33 +214,29 @@
     </section>
 
     <section class="story-section">
-        <h2 class="section-title" style="border-color: var(--success);">3. Javasolt Lépések (Action Plan)</h2>
-        <p class="section-desc">
-            Az adatok alapján a következő azonnali beavatkozásokat javasoljuk a következő negyedévre:
-        </p>
-
+        <h2 class="section-title" style="border-color: var(--success);">3. Javasolt Lépések</h2>
         <div class="conclusion-grid">
             <div class="action-card" style="--border-color: var(--accent)">
                 <span class="action-icon">🛡️</span>
                 <h3>Pénzügyi Firewall</h3>
-                <p>Mivel a Finance osztály a fő célpont, dedikált tűzfal és elkülönített hálózati szegmens bevezetése szükséges.</p>
+                <p>Dedikált tűzfal és elkülönített hálózati szegmens bevezetése a Finance osztály számára.</p>
             </div>
             <div class="action-card" style="--border-color: var(--danger)">
                 <span class="action-icon">🎓</span>
                 <h3>Phishing Tréning</h3>
-                <p>A munkaidőben történő támadások ellen a legjobb védekezés az emberi faktor erősítése rendszeres oktatással.</p>
+                <p>Rendszeres oktatás az emberi hibafaktor csökkentésére.</p>
             </div>
             <div class="action-card" style="--border-color: var(--success)">
                 <span class="action-icon">🤖</span>
                 <h3>AI Detektálás</h3>
-                <p>Az anomáliák (pl. hirtelen kiugró költségek) valós idejű szűrésére automatizált AI figyelőrendszer telepítése.</p>
+                <p>Automatizált AI figyelőrendszer a szokatlan tranzakciók kiszűrésére.</p>
             </div>
         </div>
     </section>
 
     <footer>
         <p style="margin-bottom: 10px; color: #fff; font-weight: bold;">SecurCorp Analytics 2024</p>
-        Business Intelligence Project • Week 10 Integration • Powered by Vega-Lite & Python
+        Business Intelligence Project • Week 10 Integration
     </footer>
 
     <script type="text/javascript">
@@ -257,10 +253,9 @@
             const hour = Math.floor(Math.random() * 24);
             const dateObj = new Date(2023, m, d, hour);
             
-            // Adat manipuláció a sztorihoz
             let finalHour = hour;
             if (Math.random() > 0.35) {
-                finalHour = Math.floor(Math.random() * (16 - 9 + 1)) + 9; // Munkaidő sűrűsítés
+                finalHour = Math.floor(Math.random() * (16 - 9 + 1)) + 9; 
             }
 
             let dept = depts[Math.floor(Math.random() * depts.length)];
@@ -289,7 +284,7 @@
         const darkConfig = {
             "background": "transparent",
             "view": {"stroke": "transparent"},
-            "title": {"color": "#fff", "fontSize": 16},
+            "title": {"color": "#fff", "fontSize": 18, "anchor": "start"}, // Balra igazított cím
             "style": {"guide-label": {"fill": "#94a3b8"}, "guide-title": {"fill": "#fff"}},
             "axis": {
                 "domainColor": "#334155", "gridColor": "#334155", "tickColor": "#334155", 
@@ -298,28 +293,31 @@
             "legend": {"labelColor": "#94a3b8", "titleColor": "#fff"}
         };
 
-        // --- 1. DASHBOARD SPEC (Javított magassággal) ---
+        // --- 1. DASHBOARD SPEC (JAVÍTOTT MÉRETEZÉS) ---
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": "container", // Reszponzív
+            "autosize": {"type": "fit", "contains": "padding"}, // FONTOS: Ez segít a kitöltésben
+            "width": "container", // Ez mondja meg, hogy vegye át a szülő szélességét
+            
             "vconcat": [
                 {
-                    // FELSŐ: SCATTER PLOT (Magasabb lett: 300px)
-                    "height": 300, 
+                    // SCATTER PLOT
+                    "height": 350, 
+                    "width": "container", // Explicit szélesség
                     "title": "Idővonal és Költségek (Interaktív: Húzzon sávot!)",
                     "mark": "circle",
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
                     "encoding": {
-                        "x": {"field": "date", "type": "temporal", "title": "Dátum"},
+                        "x": {"field": "date", "type": "temporal", "title": "Dátum", "axis": {"format": "%Y-%m"}},
                         "y": {"field": "cost", "type": "quantitative", "title": "Kár ($)"},
                         "color": {
                             "field": "severity",
                             "scale": {"domain": ["Low", "Medium", "High", "Critical"], "range": ["#10b981", "#f59e0b", "#f97316", "#ef4444"]},
                             "legend": {"title": "Súlyosság"}
                         },
-                        "size": {"value": 80}, // Nagyobb pöttyök
+                        "size": {"value": 80},
                         "tooltip": [{"field": "department"}, {"field": "cost", "format": "$"}]
                     }
                 },
@@ -328,7 +326,8 @@
                     "resolve": {"scale": {"color": "independent"}},
                     "hconcat": [
                         {
-                            "width": 400, "height": 250, 
+                            // BAR CHART
+                            "width": 500, "height": 300,  // Növelt fix szélesség
                             "title": "Típusok (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
@@ -339,10 +338,11 @@
                             }
                         },
                         {
-                            "width": 400, "height": 250, 
+                            // DONUT CHART
+                            "width": 500, "height": 300, // Növelt fix szélesség
                             "title": "Részlegek (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
-                            "mark": {"type": "arc", "innerRadius": 60},
+                            "mark": {"type": "arc", "innerRadius": 80},
                             "encoding": {
                                 "theta": {"aggregate": "count", "field": "department"},
                                 "color": {"field": "department", "scale": {"scheme": "category10"}},
@@ -354,17 +354,24 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (Interaktív tooltip) ---
+        // --- 2. HEATMAP SPEC (JAVÍTOTT) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
             "width": "container",
-            "height": 350,
+            "height": 400, // Magasabb lett
+            "autosize": {"type": "fit", "contains": "padding"},
+            
             "title": "Támadási Intenzitás (Nap vs Óra)",
             "mark": "rect",
             "encoding": {
-                "x": {"field": "hour", "type": "ordinal", "title": "Óra (00-23)"},
+                "x": {
+                    "field": "hour", 
+                    "type": "ordinal", // Ordinal fontos a diszkrét órákhoz
+                    "title": "Óra (00-23)",
+                    "axis": {"labelAngle": 0} // Ne forgassa el a számokat
+                },
                 "y": {
                     "field": "day", 
                     "type": "nominal", 
@@ -376,21 +383,15 @@
                     "title": "Incidensek",
                     "scale": {"scheme": "inferno"}
                 },
-                "opacity": {
-                    "condition": {"selection": "hover", "value": 1},
-                    "value": 0.5 // Ha nincs rajta az egér, halványabb
-                },
                 "tooltip": [
                     {"field": "day", "title": "Nap"},
                     {"field": "hour", "title": "Óra"},
-                    {"aggregate": "count", "title": "Incidensek Száma"}
+                    {"aggregate": "count", "title": "Darab"}
                 ]
-            },
-            "selection": {
-                "hover": {"type": "point", "on": "mouseover"} // Kiemelés hover-re
             }
         };
 
+        // Renderelés
         vegaEmbed('#viz-main', mainSpec, {actions: false}).catch(console.error);
         vegaEmbed('#viz-heatmap', heatSpec, {actions: false}).catch(console.error);
 
