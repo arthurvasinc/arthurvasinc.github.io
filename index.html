@@ -3,220 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiberbiztonsági Műszerfal</title>
+    <title>Kiberbiztonsági Műszerfal - Projekt Integráció</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --main-bg: #ffffff;
-            --primary-text: #212529;
-            --secondary-text: #495057;
-            --accent-color: #007bff;
-            --border-color: #dee2e6;
-            --shadow-color: rgba(0, 0, 0, 0.05);
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-light: #65676b;
+            --accent: #1877f2;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
-            color: var(--primary-text);
-            line-height: 1.7;
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
         }
 
         .header {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 25px;
+            max-width: 1000px;
+            margin: 0 auto 30px;
             text-align: center;
-            background-color: var(--main-bg);
+            background: var(--card-bg);
+            padding: 30px;
             border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px var(--shadow-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .header h1 {
-            color: var(--accent-color);
-            margin: 0;
-            font-size: 2.5em;
+        .header h1 { margin: 0 0 10px; color: var(--accent); }
+        .header p { color: var(--text-light); max-width: 700px; margin: 0 auto; }
+
+        .dashboard-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
+
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h3 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .card p.desc { font-size: 0.9em; color: var(--text-light); margin-bottom: 15px; }
         
-        .header p {
-            color: var(--secondary-text);
-            max-width: 700px;
-            margin: 15px auto 0;
-            font-size: 1.1em;
+        .vis-container { width: 100%; }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-light);
+            font-size: 0.8em;
         }
-
-        .container {
-            max-width: 900px;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .vis-card {
-            background-color: var(--main-bg);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px var(--shadow-color);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        .vis-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .vis-card h2 {
-            color: var(--primary-text);
-            text-align: left;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.5em;
-        }
-
-        .vis-card p {
-            color: var(--secondary-text);
-            font-size: 1em;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        #vis1, #vis2, #vis3 {
-            width: 100%;
-        }
-
     </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
-    
+
     <header class="header">
-        <h1>Interaktív Kiberbiztonsági Műszerfal</h1>
+        <h1>Vállalati Biztonsági Elemzés 2024</h1>
         <p>
-            Gyors és áttekinthető kép a minket érintő legfontosabb digitális fenyegetésekről, azok időbeli trendjeiről és eredetéről.
+            Ez a műszerfal <strong>1000 szimulált biztonsági incidenst</strong> elemez. 
+            A cél: azonosítani, melyik osztály a leggyengébb láncszem.
+            <br><em>(10. hét: Integrált Adatvizualizáció)</em>
         </p>
     </header>
 
-    <main class="container">
-        <section class="vis-card">
-            <h2>Leggyakoribb Támadási Típusok</h2>
-            <p>A diagram a leggyakrabban előforduló incidenseket mutatja. Vigye az egeret az oszlopok fölé a pontos esetszám megtekintéséhez.</p>
-            <div id="vis1"></div>
+    <main class="dashboard-grid">
+        
+        <section class="card full-width">
+            <h3>1. Kockázat Osztályok Szerint (Vezérlő)</h3>
+            <p class="desc">
+                <strong>INTERAKTÍV:</strong> Kattints valamelyik oszlopra (pl. "Finance"), hogy az egész oldalt leszűrd arra az osztályra! 
+                Látható, hogy bár az IT kezeli a legtöbb esetet, a Pénzügyön magas a kritikus hibák aránya.
+            </p>
+            <div id="vis_dept" class="vis-container"></div>
         </section>
 
-        <section class="vis-card">
-            <h2>Incidensek Számának Alakulása Havi Bontásban</h2>
-            <p>Ez a vonaldiagram a regisztrált biztonsági incidensek számának alakulását ábrázolja az elmúlt fél évben. Az interaktív tooltip segít a havi adatok leolvasásában.</p>
-            <div id="vis2"></div>
+        <section class="card">
+            <h3>2. Incidensek Időbeli Eloszlása</h3>
+            <p class="desc">Mikor történnek a támadások? Ha fent kiválasztasz egy osztályt, itt látod az ő specifikus trendjüket.</p>
+            <div id="vis_trend" class="vis-container"></div>
         </section>
 
-        <section class="vis-card">
-            <h2>Támadások Forrása Típusonként</h2>
-            <p>Ez a halmozott oszlopdiagram mélyebb betekintést nyújt, megmutatva, hogy az egyes támadási típusok milyen arányban származnak külső, belső vagy partneri forrásból.</p>
-            <div id="vis3"></div>
+        <section class="card">
+            <h3>3. Támadási Típusok Aránya</h3>
+            <p class="desc">Milyen jellegű támadások érik a kiválasztott osztályt? (Phishing, Malware, stb.)</p>
+            <div id="vis_type" class="vis-container"></div>
         </section>
+
     </main>
 
+    <footer class="footer">
+        Készítette: Arthur Vasinc | Business Intelligence Projekt | Generált adatpontok: 1000 db
+    </footer>
+
     <script type="text/javascript">
+        function generateData(count) {
+            const data = [];
+            const departments = ['IT', 'HR', 'Finance', 'Marketing', 'Sales'];
+            const types = ['Phishing', 'Malware', 'Ransomware', 'DDoS', 'Social Eng.'];
+            const severities = ['Low', 'Medium', 'High', 'Critical'];
+            
+            const start = new Date(2023, 0, 1);
+            const end = new Date(2023, 11, 31);
+            
+            for (let i = 0; i < count; i++) {
+                const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                
+                const dept = departments[Math.floor(Math.random() * departments.length)];
+                let type = types[Math.floor(Math.random() * types.length)];
+                
+                if(dept === 'Finance' && Math.random() > 0.6) {
+                    type = 'Ransomware';
+                }
 
-      // --- 1. Oszlopdiagram: Támadási típusok ---
-      const spec1 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Leggyakoribb támadási típusok.",
-        "width": "container",
-        "height": 300,
-        "data": {
-          "values": [
-            {"tipus": "Adathalászat (Phishing)", "esetszam": 482},
-            {"tipus": "Rosszindulatú szoftver (Malware)", "esetszam": 275},
-            {"tipus": "Szolgáltatásmegtagadás (DDoS)", "esetszam": 120},
-            {"tipus": "Azonosságlopás", "esetszam": 95},
-            {"tipus": "Belső fenyegetés", "esetszam": 65}
-          ]
-        },
-        "mark": {"type": "bar", "cornerRadiusEnd": 4},
-        "encoding": {
-          "y": {"field": "tipus", "type": "nominal", "title": null, "sort": "-x"},
-          "x": {"field": "esetszam", "type": "quantitative", "title": "Esetszám"},
-          "color": {"field": "tipus", "type": "nominal", "legend": null, "scale": {"scheme": "category10"}},
-          "tooltip": [
-            {"field": "tipus", "title": "Típus"},
-            {"field": "esetszam", "title": "Esetszám"}
-          ]
+                data.push({
+                    "id": i,
+                    "date": date.toISOString().split('T')[0],
+                    "department": dept,
+                    "type": type,
+                    "severity": severities[Math.floor(Math.random() * severities.length)],
+                    "cost": Math.floor(Math.random() * 5000) + 100
+                });
+            }
+            return data;
         }
-      };
-      vegaEmbed('#vis1', spec1, {actions: false});
 
-      // --- 2. Vonaldiagram: Havi trendek ---
-      const spec2 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Incidensek számának alakulása.",
-        "width": "container",
-        "height": 300,
-        "data": {
-          "values": [
-            {"honap": "2025-04-01", "incidensek": 150},
-            {"honap": "2025-05-01", "incidensek": 180},
-            {"honap": "2025-06-01", "incidensek": 210},
-            {"honap": "2025-07-01", "incidensek": 190},
-            {"honap": "2025-08-01", "incidensek": 240},
-            {"honap": "2025-09-01", "incidensek": 260}
-          ]
-        },
-        "mark": {"type": "line", "point": true, "tooltip": true, "strokeWidth": 3},
-        "encoding": {
-          "x": {"field": "honap", "type": "temporal", "timeUnit": "yearmonth", "title": "Hónap"},
-          "y": {"field": "incidensek", "type": "quantitative", "title": "Incidensek Száma", "scale": {"zero": false}}
-        }
-      };
-      vegaEmbed('#vis2', spec2, {actions: false});
+        const rawData = generateData(1000);
+        console.log("Generált adatok (első 5 sor):", rawData.slice(0, 5));
 
-      // --- 3. Halmozott Oszlopdiagram: Támadások forrása ---
-      const spec3 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Támadások forrása típusonként.",
-        "width": "container",
-        "height": 300,
-        "data": {
-          "values": [
-            {"tipus": "Adathalászat", "forras": "Külső", "esetszam": 450},
-            {"tipus": "Adathalászat", "forras": "Belső (hiba)", "esetszam": 32},
-            {"tipus": "Rosszindulatú szoftver", "forras": "Külső", "esetszam": 260},
-            {"tipus": "Rosszindulatú szoftver", "forras": "Belső (hiba)", "esetszam": 15},
-            {"tipus": "Szolgáltatásmegtagadás", "forras": "Külső", "esetszam": 120},
-            {"tipus": "Azonosságlopás", "forras": "Külső", "esetszam": 80},
-            {"tipus": "Azonosságlopás", "forras": "Partner", "esetszam": 15},
-            {"tipus": "Belső fenyegetés", "forras": "Belső (szándékos)", "esetszam": 65}
-          ]
-        },
-        "mark": "bar",
-        "encoding": {
-          "y": {"field": "tipus", "type": "nominal", "title": null, "sort": "-x"},
-          "x": {"aggregate": "sum", "field": "esetszam", "title": "Összes esetszám"},
-          "color": {"field": "forras", "title": "Forrás", "scale": {"scheme": "tableau10"}},
-          "tooltip": [
-            {"field": "tipus", "title": "Típus"},
-            {"field": "forras", "title": "Forrás"},
-            {"field": "esetszam", "title": "Esetszám"}
-          ]
-        }
-      };
-      vegaEmbed('#vis3', spec3, {actions: false});
+        
+        const commonData = { "values": rawData };
+
+        const specDept = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": "container", "height": 200,
+            "data": commonData,
+            "selection": {
+                "deptFilter": {
+                    "type": "point", 
+                    "fields": ["department"]
+                }
+            },
+            "mark": {"type": "bar", "cornerRadius": 5},
+            "encoding": {
+                "x": {"field": "department", "type": "nominal", "title": "Részleg"},
+                "y": {"aggregate": "count", "title": "Incidensek Száma"},
+                "color": {
+                    "condition": {"selection": "deptFilter", "value": "#1877f2"},
+                    "value": "lightgray"
+                },
+                "tooltip": [{"field": "department"}, {"aggregate": "count", "title": "Darab"}]
+            },
+            "title": "Kattints egy oszlopra a szűréshez!"
+        };
+
+        const specTrend = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": "container", "height": 250,
+            "data": commonData,
+            "transform": [
+                {"filter": {"selection": "deptFilter"}}
+            ],
+            "mark": {"type": "line", "point": true},
+            "encoding": {
+                "x": {"field": "date", "type": "temporal", "timeUnit": "yearmonth", "title": "Hónap"},
+                "y": {"aggregate": "count", "title": "Incidensek"},
+                "color": {"value": "#ff5722"}
+            }
+        };
+
+        const specType = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": "container", "height": 250,
+            "data": commonData,
+            "transform": [
+                {"filter": {"selection": "deptFilter"}}
+            ],
+            "mark": "arc",
+            "encoding": {
+                "theta": {"aggregate": "count", "field": "type"},
+                "color": {"field": "type", "title": "Támadás típusa"},
+                "tooltip": [{"field": "type"}, {"aggregate": "count", "title": "Darab"}]
+            }
+        };
+
+        vegaEmbed('#vis_dept', specDept);
+        vegaEmbed('#vis_trend', specTrend);
+        vegaEmbed('#vis_type', specType);
+
     </script>
-
 </body>
 </html>
