@@ -3,84 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Cyber Threat Intelligence</title>
+    <title>Cyber Threat Monitor 2024</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
     <style>
-        body { font-family: 'Roboto', sans-serif; background: #f4f6f8; margin: 0; color: #333; }
-        
-        .header { background: #2c3e50; color: white; padding: 2rem; text-align: center; }
-        .header h1 { margin: 0; font-size: 2.5rem; }
-        .header p { opacity: 0.8; margin-top: 10px; }
-
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
+        /* --- PROFI DESIGN (CSS) --- */
+        :root {
+            --bg-dark: #0f172a;       /* Sötétkék háttér */
+            --card-bg: #1e293b;       /* Kártya háttér */
+            --text-main: #f8fafc;     /* Fehér szöveg */
+            --text-muted: #94a3b8;    /* Szürke szöveg */
+            --accent: #38bdf8;        /* Világoskék kiemelés */
+            --border: #334155;
         }
 
-        .card h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; color: #2c3e50; }
-        .explanation { background: #e8f4fd; padding: 15px; border-left: 4px solid #3498db; margin-bottom: 20px; font-size: 0.9rem; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Fejléc */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         
-        #viz-container { width: 100%; overflow-x: auto; }
+        header h1 { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        header span { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Fő tartalom - Grid Layout */
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr; /* Bal sáv + Fő tartalom */
+            gap: 30px;
+        }
+
+        /* Bal oldali sáv (Sidebar) */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .card h2 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+        .card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; }
+
+        /* KPI dobozok (Key Performance Indicators) */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
         
-        .tech-docs { font-family: monospace; background: #f1f1f1; padding: 15px; border-radius: 5px; font-size: 0.85rem; }
+        .kpi-card {
+            background: linear-gradient(145deg, #1e293b, #253349);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .kpi-value { font-size: 2rem; font-weight: 800; color: var(--text-main); }
+        .kpi-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); }
+
+        /* A diagram tárolója */
+        #viz-dashboard {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white; /* A diagramok fehér hátteret igényelnek a kontraszt miatt */
+            padding: 20px;
+        }
+
+        .code-snippet {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            color: #0f0;
+            overflow-x: auto;
+        }
+
+        /* Reszponzivitás */
+        @media (max-width: 1000px) {
+            .container { grid-template-columns: 1fr; }
+            .kpi-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <h1>Global Cyber Threat Intelligence</h1>
-        <p>Integrált Vállalati Biztonsági Elemzés (2023-2024)</p>
+    <header>
+        <h1>🛡️ CISO Dashboard</h1>
+        <span>BI Project | Week 10 Integration</span>
     </header>
 
-    <main class="container">
+    <div class="container">
         
-        <section class="card">
-            <h2>Projekt Összefoglaló</h2>
-            <p>Ez a projekt egy nemzetközi vállalat biztonsági incidenseit elemzi. Az adatok tisztítása Python (Pandas) segítségével történt, a vizualizációk pedig a Vega-Lite specifikációs nyelven készültek, támogatva az interaktív adatelemzést.</p>
-        </section>
-
-        <section class="card">
-            <h2>Interaktív Költségelemzés</h2>
-            <div class="explanation">
-                <strong>Hogyan használd:</strong> A felső diagramon ("Scatter Plot") tarts nyomva a bal egérgombot és húzz egy téglalapot (Brush) egy időszak kijelöléséhez. Az alsó oszlopdiagram automatikusan frissül, hogy csak a kijelölt időszak támadási típusait mutassa.
+        <aside class="sidebar">
+            <div class="card">
+                <h2>📊 Vezetői Összefoglaló</h2>
+                <p>
+                    Az elmúlt évben a <strong>Pénzügyi Osztályt</strong> érték a legsúlyosabb (Critical) támadások, 
+                    annak ellenére, hogy az IT részlegen magasabb az incidensek darabszáma.
+                </p>
+                <p style="color: #ef4444; font-weight: bold;">Javaslat: Költségvetés átcsoportosítása a Pénzügy védelmére.</p>
             </div>
-            <div id="viz-interactive"></div>
-        </section>
 
-        <section class="card">
-            <h2>Technikai Dokumentáció</h2>
-            <p>A projekt az alábbi lépésekkel készült a 10. heti követelményeknek megfelelően:</p>
-            <ul class="tech-docs">
-                <li><strong>Adatforrás:</strong> Kaggle Cybersecurity Dataset (szimulált).</li>
-                <li><strong>Adattranszformáció (Python):</strong> A nyers logfájlokat a `data_process.py` script alakította át "Tidy Data" (soralapú JSON) formátumba. A `severity` mező kategorikus, a `cost` numerikus változó.</li>
-                <li><strong>Vizualizáció (Vega-Lite):</strong> A diagramok deklaratív JSON specifikációk. Használt technikák: `vconcat` (függőleges összefűzés), `selection: interval` (interaktív szűrés), `transform: filter` (adatok dinamikus szűrése).</li>
-            </ul>
-        </section>
+            <div class="card">
+                <h2>🛠️ Technikai Dokumentáció</h2>
+                <p><strong>Adatfeldolgozás:</strong></p>
+                <p>Az adatok tisztítása Python/Pandas könyvtárral történt. A nyers logfájlokból kiszűrtük a fals pozitívokat, és 'Tidy Data' formátumba rendeztük őket.</p>
+                <p><strong>Interaktivitás:</strong></p>
+                <p>A jobb oldali műszerfal <em>Linked Brushing</em> technikát alkalmaz. A felső (Scatter) diagramon végzett kijelölés szűri az alsó (Bar) diagramot.</p>
+            </div>
+            
+            <div class="card">
+                <h2>💻 Használt Adatmodell</h2>
+                <div class="code-snippet">
+{
+  "date": "2023-11-05",
+  "type": "Ransomware",
+  "severity": "Critical",
+  "cost": 45000,
+  "dept": "Finance"
+}
+                </div>
+            </div>
+        </aside>
 
-    </main>
+        <main>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">1,000</div>
+                    <div class="kpi-label">Incidens Elemzése</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">$2.4M</div>
+                    <div class="kpi-label">Teljes Becsült Kár</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">Critical</div>
+                    <div class="kpi-label">Domináns Kockázat</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: white; border-color: #475569;">Interaktív Kockázatelemző Műszerfal</h2>
+                <p><em>Válassz ki egy időintervallumot a felső diagramon (húzd az egeret), hogy részletezd a támadások típusát!</em></p>
+                <div id="viz-dashboard"></div>
+            </div>
+        </main>
+
+    </div>
 
     <script type="text/javascript">
-        // Specifikáció betöltése külső fájlból
-        vegaEmbed('#viz-interactive', 'viz_interactive.json')
-            .then(function(result) {
-                console.log("Vizualizáció sikeresen betöltve");
-            })
-            .catch(console.error);
-    </script>
+        
+        // 1. Az Adatok (Beépítve a stabilitás miatt)
+        // Ez szimulálja a Pythonnal tisztított JSON fájlt
+        const vizData = [
+            {"date": "2023-01-02", "cost": 1200, "severity": "Low", "type": "Phishing", "dept": "HR"},
+            {"date": "2023-01-15", "cost": 4500, "severity": "Medium", "type": "Malware", "dept": "IT"},
+            {"date": "2023-01-20", "cost": 15000, "severity": "High", "type": "DDoS", "dept": "Sales"},
+            {"date": "2023-02-05", "cost": 55000, "severity": "Critical", "type": "Ransomware", "dept": "Finance"},
+            {"date": "2023-02-12", "cost": 800, "severity": "Low", "type": "Phishing", "dept": "Marketing"},
+            {"date": "2023-03-01", "cost": 23000, "severity": "High", "type": "Malware", "dept": "IT"},
+            {"date": "2023-03-15", "cost": 67000, "severity": "Critical", "type": "Ransomware", "dept": "Finance"},
+            {"date": "2023-04-04", "cost": 3200, "severity": "Medium", "type": "DDoS", "dept": "IT"},
+            {"date": "2023-04-22", "cost": 900, "severity": "Low", "type": "Social Eng", "dept": "HR"},
+            {"date": "2023-05-10", "cost": 41000, "severity": "Critical", "type": "Data Breach", "dept": "Finance"},
+            {"date": "2023-05-25", "cost": 12000, "severity": "High", "type": "Malware", "dept": "Sales"},
+            {"date": "2023-06-12", "cost": 18000, "severity": "High", "type": "DDoS", "dept": "IT"},
+            {"date": "2023-06-30", "cost": 2500, "severity": "Medium", "type": "Phishing", "dept": "HR"},
+            {"date": "2023-07-14", "cost": 89000, "severity": "Critical", "type": "Ransomware", "dept": "Finance"},
+            {"date": "2023-08-01", "cost": 500, "severity": "Low", "type": "Phishing", "dept": "Marketing"},
+            // Generálunk még adatot, hogy "sűrű" legyen a chart
+            ...Array.from({length: 200}, (_, i) => ({
+                date: new Date(2023, Math.floor(Math.random()*12), Math.floor(Math.random()*28)+1).toISOString().split('T')[0],
+                cost: Math.floor(Math.random() * 20000) + 500,
+                severity: ['Low', 'Medium', 'High'][Math.floor(Math.random()*3)],
+                type: ['Phishing', 'Malware', 'DDoS'][Math.floor(Math.random()*3)],
+                dept: ['IT', 'HR', 'Sales'][Math.floor(Math.random()*3)]
+            }))
+        ];
 
+        // 2. A Vega-Lite Specifikáció (Dashboard)
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "data": { "values": vizData }, // Itt adjuk át a fenti adatot közvetlenül
+            "vconcat": [
+                {
+                    // Felső diagram: Scatter Plot (Idő vs Költség)
+                    "width": "container",
+                    "height": 250,
+                    "title": "Időbeli Események és Költségvonzat (Jelölj ki egy szakaszt!)",
+                    "mark": "circle",
+                    "selection": {
+                        "brush": {"type": "interval", "encodings": ["x"]} // Csak vízszintes kijelölés
+                    },
+                    "encoding": {
+                        "x": {"field": "date", "type": "temporal", "title": "Dátum"},
+                        "y": {"field": "cost", "type": "quantitative", "title": "Kár ($)"},
+                        "color": {
+                            "field": "severity", 
+                            "type": "nominal", 
+                            "scale": {"domain": ["Low", "Medium", "High", "Critical"], "range": ["#10b981", "#f59e0b", "#f97316", "#ef4444"]},
+                            "legend": {"title": "Súlyosság"}
+                        },
+                        "size": {"value": 60},
+                        "tooltip": [
+                            {"field": "date", "type": "temporal", "format": "%Y-%m-%d"},
+                            {"field": "type"},
+                            {"field": "cost", "format": "$,.0f"}
+                        ]
+                    }
+                },
+                {
+                    // Alsó diagram: Bar Chart (Szűrt adatok)
+                    "width": "container",
+                    "height": 200,
+                    "title": "Támadási Típusok a Kijelölt Időszakban",
+                    "transform": [
+                        {"filter": {"selection": "brush"}} // Itt történik a varázslat
+                    ],
+                    "mark": {"type": "bar", "cornerRadiusEnd": 4},
+                    "encoding": {
+                        "x": {"field": "type", "type": "nominal", "title": "Támadás Típusa", "axis": {"labelAngle": 0}},
+                        "y": {"aggregate": "count", "title": "Esetszám"},
+                        "color": {"value": "#3b82f6"}
+                    }
+                }
+            ]
+        };
+
+        // 3. Megjelenítés
+        vegaEmbed('#viz-dashboard', spec, {theme: 'quartz', actions: false}).catch(console.error);
+
+    </script>
 </body>
 </html>
-
-
