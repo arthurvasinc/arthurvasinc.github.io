@@ -1,0 +1,43 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "attacks_data.json"
+  },
+  "vconcat": [
+    {
+      "width": 700,
+      "height": 300,
+      "title": "Támadások Költsége és Súlyossága (Jelölj ki egy területet!)",
+      "mark": "circle",
+      "selection": {
+        "brush": {"type": "interval"}
+      },
+      "encoding": {
+        "x": {"field": "date", "type": "temporal", "title": "Dátum"},
+        "y": {"field": "cost", "type": "quantitative", "title": "Kár Értéke ($)"},
+        "color": {
+          "field": "severity",
+          "type": "nominal",
+          "scale": {"domain": ["Low", "Medium", "High", "Critical"], "range": ["#6c757d", "#ffc107", "#fd7e14", "#dc3545"]},
+          "title": "Súlyosság"
+        },
+        "size": {"value": 100},
+        "tooltip": [{"field": "country"}, {"field": "type"}, {"field": "cost"}]
+      }
+    },
+    {
+      "width": 700,
+      "height": 200,
+      "title": "Támadási Típusok a Kijelölt Időszakban",
+      "transform": [
+        {"filter": {"selection": "brush"}}
+      ],
+      "mark": "bar",
+      "encoding": {
+        "x": {"field": "type", "type": "nominal", "title": "Támadás Típusa"},
+        "y": {"aggregate": "count", "title": "Esetszám"},
+        "color": {"value": "#0d6efd"}
+      }
+    }
+  ]
+}
