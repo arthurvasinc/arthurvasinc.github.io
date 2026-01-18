@@ -14,13 +14,14 @@
 
     <style>
         :root {
-            --bg-body: #0b1120;       /* Deepest Dark Blue */
-            --bg-card: #1e293b;       /* Card Background */
-            --text-main: #f1f5f9;     /* White/Gray text */
-            --text-muted: #94a3b8;    /* Muted text */
-            --accent: #38bdf8;        /* Neon Cyan */
-            --danger: #ef4444;        /* Red */
-            --grid-line: #334155;     /* Dark grid lines */
+            --bg-body: #0b1120;       
+            --bg-card: #1e293b;       
+            --text-main: #f1f5f9;     
+            --text-muted: #94a3b8;    
+            --accent: #38bdf8;        
+            --danger: #ef4444;        
+            --success: #10b981;       
+            --grid-line: #334155;     
         }
 
         body {
@@ -30,7 +31,7 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar issues */
+            overflow-x: hidden;
         }
 
         /* --- HERO SECTION --- */
@@ -44,21 +45,21 @@
             background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0b1120 100%);
             padding: 20px;
             border-bottom: 1px solid var(--grid-line);
+            position: relative;
         }
 
         h1 { 
-            font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsive font size */
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
             font-weight: 800; 
             margin-bottom: 10px; 
             letter-spacing: -2px;
-            background: -webkit-linear-gradient(0deg, #fff, #94a3b8);
+            background: linear-gradient(to right, #fff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
         .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 50px; }
 
-        /* KPI Cards */
         .hero-kpi {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -68,21 +69,23 @@
         }
 
         .kpi-card {
-            background: rgba(30, 41, 59, 0.4); /* Glass effect */
+            background: rgba(30, 41, 59, 0.4);
             border: 1px solid rgba(255,255,255,0.05);
             padding: 25px;
             border-radius: 16px;
             backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
         }
+        .kpi-card:hover { transform: translateY(-5px); border-color: var(--accent); }
         
         .kpi-val { font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
         .kpi-lbl { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; color: var(--accent); }
 
-        /* --- STORY SECTIONS --- */
+        /* --- CONTENT LAYOUT --- */
         .story-section {
             width: 90%;
-            max-width: 1600px; /* Wider layout */
-            margin: 100px auto;
+            max-width: 1600px;
+            margin: 120px auto;
         }
 
         .section-title {
@@ -101,7 +104,6 @@
             max-width: 800px;
         }
 
-        /* --- VIZ CONTAINER (DARK MODE) --- */
         .viz-wrapper {
             background: var(--bg-card);
             border: 1px solid var(--grid-line);
@@ -110,22 +112,38 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        /* Remove default Vega actions link placement issue */
         .vega-actions { display: none; }
 
-        /* Code Block */
-        .code-display {
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #10b981; /* Hacker Green */
-            overflow-x: auto;
+        /* --- RECOMMENDATIONS (THE ENDING) --- */
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
 
-        /* Scroll Hint */
+        .action-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: 30px;
+            border-radius: 12px;
+            border-top: 4px solid var(--border-color);
+        }
+
+        .action-card h3 { margin-top: 0; font-size: 1.3rem; }
+        .action-card p { color: var(--text-muted); font-size: 0.95rem; }
+        
+        .action-icon { font-size: 2rem; margin-bottom: 15px; display: block; }
+
+        /* Footer */
+        footer {
+            padding: 60px 20px;
+            text-align: center;
+            background: #050911;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--grid-line);
+        }
+
         .scroll-down {
             margin-top: 60px;
             font-size: 2rem;
@@ -134,15 +152,6 @@
             cursor: pointer;
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-
-        /* Footer */
-        footer {
-            padding: 40px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--grid-line);
-        }
 
     </style>
 </head>
@@ -173,44 +182,70 @@
     <section class="story-section">
         <h2 class="section-title">1. A Kockázati Mátrix</h2>
         <p class="section-desc">
-            Interaktív elemzés: A lenti diagramok <strong>össze vannak kötve</strong>. 
-            Jelöljön ki egy időszakot a felső (Scatter) diagramon az egérrel (húzás), 
-            és figyelje meg, hogyan változnak az alsó adatok!
+            Az alábbi interaktív felület összefüggéseket tár fel az incidensek időpontja, költsége és típusa között.
+            <br><span style="color: var(--accent)">Használat:</span> Jelöljön ki egy időszakot a felső diagramon (húzás bal gombbal)!
         </p>
         
-        <div class="viz-wrapper" id="viz-main"></div>
+        <div class="viz-wrapper" id="viz-main" style="min-height: 600px;"></div>
     </section>
 
-    <section class="story-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
-        <div>
-            <h2 class="section-title" style="border-color: var(--danger);">2. Támadói Mintázatok</h2>
-            <p class="section-desc">
-                Mikor vagyunk a legsebezhetőbbek?
-                <br><br>
-                A <strong>Hőtérkép (Heatmap)</strong> megmutatja a támadások intenzitását napokra és órákra bontva. 
-                Jól látható a sötétebb zóna a munkaidőben (09:00 - 17:00), ami célzott, humán eredetű támadásokra utal.
-            </p>
-            <div class="code-display">
-// JSON Adatpont Minta
-{
-  "date": "2023-11-04",
-  "day": "Wednesday",
-  "hour": 14,
-  "type": "Phishing",
-  "dept": "Finance"
-}
+    <section class="story-section">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 30px;">
+            <div>
+                <h2 class="section-title" style="border-color: var(--danger);">2. Támadói Mintázatok</h2>
+                <p class="section-desc" style="padding-left: 0; margin-left: 20px;">
+                    A Heatmap elemzés rávilágít, hogy a támadások <strong>munkaidőben (09:00 - 17:00)</strong> koncentrálódnak.
+                    Ez megerősíti a gyanút, hogy a hackerek a dolgozók figyelmetlenségére építenek (Social Engineering).
+                    <br><br>
+                    <em>Vigye az egeret a négyzetek fölé a részletekért!</em>
+                </p>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border: 1px dashed var(--grid-line);">
+                <code style="color: #10b981; font-family: 'JetBrains Mono'">
+                    >> ANALYZING PATTERNS...<br>
+                    >> DETECTED: HIGH ACTIVITY @ 14:00<br>
+                    >> ORIGIN: HUMAN FACTOR<br>
+                    >> STATUS: CONFIRMED
+                </code>
             </div>
         </div>
+        
         <div class="viz-wrapper" id="viz-heatmap"></div>
     </section>
 
+    <section class="story-section">
+        <h2 class="section-title" style="border-color: var(--success);">3. Javasolt Lépések (Action Plan)</h2>
+        <p class="section-desc">
+            Az adatok alapján a következő azonnali beavatkozásokat javasoljuk a következő negyedévre:
+        </p>
+
+        <div class="conclusion-grid">
+            <div class="action-card" style="--border-color: var(--accent)">
+                <span class="action-icon">🛡️</span>
+                <h3>Pénzügyi Firewall</h3>
+                <p>Mivel a Finance osztály a fő célpont, dedikált tűzfal és elkülönített hálózati szegmens bevezetése szükséges.</p>
+            </div>
+            <div class="action-card" style="--border-color: var(--danger)">
+                <span class="action-icon">🎓</span>
+                <h3>Phishing Tréning</h3>
+                <p>A munkaidőben történő támadások ellen a legjobb védekezés az emberi faktor erősítése rendszeres oktatással.</p>
+            </div>
+            <div class="action-card" style="--border-color: var(--success)">
+                <span class="action-icon">🤖</span>
+                <h3>AI Detektálás</h3>
+                <p>Az anomáliák (pl. hirtelen kiugró költségek) valós idejű szűrésére automatizált AI figyelőrendszer telepítése.</p>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        SecurCorp Analytics • Business Intelligence Project • Week 10 Integration
+        <p style="margin-bottom: 10px; color: #fff; font-weight: bold;">SecurCorp Analytics 2024</p>
+        Business Intelligence Project • Week 10 Integration • Powered by Vega-Lite & Python
     </footer>
 
     <script type="text/javascript">
         
-        // --- 1. ADATGENERÁLÁS ---
+        // --- ADATGENERÁLÁS ---
         const dataPoints = [];
         const depts = ['IT', 'HR', 'Finance', 'Sales', 'Marketing'];
         const types = ['Phishing', 'Malware', 'DDoS', 'Ransomware', 'Social Eng'];
@@ -220,25 +255,19 @@
             const m = Math.floor(Math.random() * 12);
             const d = Math.floor(Math.random() * 28) + 1;
             const hour = Math.floor(Math.random() * 24);
-            
-            // Dátum és Nap
             const dateObj = new Date(2023, m, d, hour);
-            const dateStr = dateObj.toISOString().split('T')[0];
-            const dayName = days[dateObj.getDay() === 0 ? 6 : dateObj.getDay() - 1]; // JS: 0=Vasárnap
+            
+            // Adat manipuláció a sztorihoz
+            let finalHour = hour;
+            if (Math.random() > 0.35) {
+                finalHour = Math.floor(Math.random() * (16 - 9 + 1)) + 9; // Munkaidő sűrűsítés
+            }
 
-            const dept = depts[Math.floor(Math.random() * depts.length)];
+            let dept = depts[Math.floor(Math.random() * depts.length)];
             let type = types[Math.floor(Math.random() * types.length)];
             let severity = "Low";
             let cost = Math.floor(Math.random() * 5000) + 500;
 
-            // SZTORI LOGIKA
-            // 1. Munkaidő sűrűsítése a heatmaphez
-            let finalHour = hour;
-            if (Math.random() > 0.4) {
-                finalHour = Math.floor(Math.random() * (16 - 9 + 1)) + 9; // 09:00 - 16:00
-            }
-
-            // 2. Finance = Drága
             if (dept === 'Finance' && Math.random() > 0.5) { 
                 type = 'Ransomware'; 
                 severity = 'Critical';
@@ -246,46 +275,40 @@
             }
 
             dataPoints.push({
-                date: dateStr,
+                date: dateObj.toISOString().split('T')[0],
                 department: dept,
                 type: type,
                 severity: severity,
                 cost: cost,
-                day: dayName,
+                day: days[dateObj.getDay() === 0 ? 6 : dateObj.getDay() - 1],
                 hour: finalHour
             });
         }
 
-        // --- DARK THEME KONFIGURÁCIÓ (Hogy ne legyen fehér doboz) ---
+        // --- DARK THEME CONFIG ---
         const darkConfig = {
-            "background": "transparent", // Átlátszó háttér
+            "background": "transparent",
             "view": {"stroke": "transparent"},
             "title": {"color": "#fff", "fontSize": 16},
             "style": {"guide-label": {"fill": "#94a3b8"}, "guide-title": {"fill": "#fff"}},
             "axis": {
-                "domainColor": "#334155", 
-                "gridColor": "#334155", 
-                "tickColor": "#334155", 
-                "labelColor": "#94a3b8", 
-                "titleColor": "#f8fafc"
+                "domainColor": "#334155", "gridColor": "#334155", "tickColor": "#334155", 
+                "labelColor": "#94a3b8", "titleColor": "#f8fafc"
             },
-            "legend": {
-                "labelColor": "#94a3b8", 
-                "titleColor": "#fff"
-            }
+            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff"}
         };
 
-        // --- 1. MAIN DASHBOARD SPEC ---
+        // --- 1. DASHBOARD SPEC (Javított magassággal) ---
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": "container", // Reszponzív szélesség
+            "width": "container", // Reszponzív
             "vconcat": [
                 {
-                    // SCATTER PLOT
-                    "height": 250,
-                    "title": "Idővonal és Költségek (Interaktív Szűrő: Húzzon sávot!)",
+                    // FELSŐ: SCATTER PLOT (Magasabb lett: 300px)
+                    "height": 300, 
+                    "title": "Idővonal és Költségek (Interaktív: Húzzon sávot!)",
                     "mark": "circle",
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
                     "encoding": {
@@ -296,39 +319,33 @@
                             "scale": {"domain": ["Low", "Medium", "High", "Critical"], "range": ["#10b981", "#f59e0b", "#f97316", "#ef4444"]},
                             "legend": {"title": "Súlyosság"}
                         },
-                        "size": {"value": 60},
-                        "tooltip": [{"field": "department"}, {"field": "cost"}]
+                        "size": {"value": 80}, // Nagyobb pöttyök
+                        "tooltip": [{"field": "department"}, {"field": "cost", "format": "$"}]
                     }
                 },
                 {
-                    "columns": 2, // Két oszlopba rendezi az alsókat
+                    "columns": 2,
                     "resolve": {"scale": {"color": "independent"}},
                     "hconcat": [
                         {
-                            // BAR CHART
                             "width": 400, "height": 250, 
-                            "title": "Támadási Típusok (Szűrt)",
+                            "title": "Típusok (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
                             "encoding": {
                                 "y": {"field": "type", "type": "nominal", "title": null, "sort": "-x"},
                                 "x": {"aggregate": "count", "title": "Esetszám"},
-                                "color": {"value": "#38bdf8"} // Neon Blue
+                                "color": {"value": "#38bdf8"}
                             }
                         },
                         {
-                            // DONUT CHART
                             "width": 400, "height": 250, 
-                            "title": "Érintett Részlegek (Szűrt)",
+                            "title": "Részlegek (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "arc", "innerRadius": 60},
                             "encoding": {
                                 "theta": {"aggregate": "count", "field": "department"},
-                                "color": {
-                                    "field": "department", 
-                                    "scale": {"scheme": "category10"},
-                                    "legend": {"title": "Részleg"}
-                                },
+                                "color": {"field": "department", "scale": {"scheme": "category10"}},
                                 "tooltip": [{"field": "department"}, {"aggregate": "count"}]
                             }
                         }
@@ -337,13 +354,13 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC ---
+        // --- 2. HEATMAP SPEC (Interaktív tooltip) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
             "width": "container",
-            "height": 300,
+            "height": 350,
             "title": "Támadási Intenzitás (Nap vs Óra)",
             "mark": "rect",
             "encoding": {
@@ -357,18 +374,23 @@
                 "color": {
                     "aggregate": "count",
                     "title": "Incidensek",
-                    "scale": {"scheme": "inferno"} // Drámai színek (fekete->narancs->sárga)
+                    "scale": {"scheme": "inferno"}
+                },
+                "opacity": {
+                    "condition": {"selection": "hover", "value": 1},
+                    "value": 0.5 // Ha nincs rajta az egér, halványabb
                 },
                 "tooltip": [
                     {"field": "day", "title": "Nap"},
                     {"field": "hour", "title": "Óra"},
-                    {"aggregate": "count", "title": "Darab"}
+                    {"aggregate": "count", "title": "Incidensek Száma"}
                 ]
+            },
+            "selection": {
+                "hover": {"type": "point", "on": "mouseover"} // Kiemelés hover-re
             }
         };
 
-        // --- RENDER ---
-        // Fontos: a theme 'null' legyen, hogy a saját configunk érvényesüljön
         vegaEmbed('#viz-main', mainSpec, {actions: false}).catch(console.error);
         vegaEmbed('#viz-heatmap', heatSpec, {actions: false}).catch(console.error);
 
