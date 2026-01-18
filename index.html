@@ -82,8 +82,8 @@
 
         /* --- CONTENT LAYOUT --- */
         .story-section {
-            width: 90%;
-            max-width: 1400px;
+            width: 95%; /* Kicsit szélesebb margó */
+            max-width: 1600px;
             margin: 120px auto;
         }
 
@@ -281,7 +281,7 @@
 
     <script type="text/javascript">
         
-        // --- ADATGENERÁLÁS ---
+        // --- ADATGENERÁLÁS (JAVÍTOTT SZÍNEKKEL) ---
         const dataPoints = [];
         const depts = ['IT', 'HR', 'Finance', 'Sales', 'Marketing'];
         const types = ['Phishing', 'Malware', 'DDoS', 'Ransomware', 'Social Eng'];
@@ -300,12 +300,20 @@
 
             let dept = depts[Math.floor(Math.random() * depts.length)];
             let type = types[Math.floor(Math.random() * types.length)];
+            
+            // --- JAVÍTOTT SZÍN LOGIKA ---
+            // Véletlenszerűen generálunk mindenféle súlyosságot
+            let rand = Math.random();
             let severity = "Low";
+            if (rand > 0.4) severity = "Medium"; // Sárga
+            if (rand > 0.7) severity = "High";   // Narancs
+
             let cost = Math.floor(Math.random() * 5000) + 500;
 
-            if (dept === 'Finance' && Math.random() > 0.5) { 
+            // Finance továbbra is kritikus maradjon gyakrabban
+            if (dept === 'Finance' && Math.random() > 0.6) { 
                 type = 'Ransomware'; 
-                severity = 'Critical';
+                severity = 'Critical'; // Piros
                 cost *= 8;
             }
 
@@ -333,7 +341,9 @@
             "legend": {"labelColor": "#94a3b8", "titleColor": "#fff"}
         };
 
-        // --- 1. DASHBOARD SPEC ---
+        // --- 1. DASHBOARD SPEC (SZÉLESÍTETT VERZIÓ) ---
+        // Matek: 600px + 600px + 50px gap = 1250px Összesen
+        
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
@@ -342,8 +352,8 @@
             
             "vconcat": [
                 {
-                    // FELSŐ: 850px Széles
-                    "width": 850, 
+                    // FELSŐ: 1250px Széles (Teljes szélesség)
+                    "width": 1250, 
                     "height": 250, 
                     "title": "Idővonal és Költségek (Interaktív: Húzzon sávot!)",
                     "mark": "circle",
@@ -361,13 +371,13 @@
                     }
                 },
                 {
-                    // ALSÓ: 2x400 + 50 gap = 850px Total
+                    // ALSÓ: 2x600 + 50 gap = 1250px Total
                     "columns": 2,
                     "resolve": {"scale": {"color": "independent"}},
                     "spacing": 50,
                     "hconcat": [
                         {
-                            "width": 400, "height": 250, 
+                            "width": 600, "height": 250, 
                             "title": "Típusok (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
@@ -378,7 +388,7 @@
                             }
                         },
                         {
-                            "width": 400, "height": 250, 
+                            "width": 600, "height": 250, 
                             "title": "Részlegek (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "arc", "innerRadius": 80},
@@ -393,13 +403,12 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (JAVÍTOTT: FIX SZÉLESSÉG) ---
-        // Itt állítottam be a 850-et, hogy megegyezzen a fentivel!
+        // --- 2. HEATMAP SPEC (SZINTÉN 1250px) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": 850, 
+            "width": 1250, 
             "height": 350,
             
             "title": "Támadási Intenzitás (Nap vs Óra)",
