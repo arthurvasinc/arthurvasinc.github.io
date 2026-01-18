@@ -136,7 +136,7 @@
             padding: 40px; 
             box-shadow: 0 0 50px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
             display: flex;
-            justify-content: center; /* Ez tartja középen a diagramot */
+            justify-content: center; 
             align-items: center;
             overflow: hidden;
             backdrop-filter: blur(5px);
@@ -275,15 +275,15 @@
                     ⚠️ AI Threat Analysis (Automated)
                 </div>
                 <div class="insight-row">
-                    <span class="insight-label">Legveszélyesebb Idősáv</span>
+                    <span class="insight-label">High Risk Window</span>
                     <span class="insight-data trend-up">13:00 - 15:00</span>
                 </div>
                 <div class="insight-row">
-                    <span class="insight-label">Domináns Támadás</span>
+                    <span class="insight-label">Dominant Vector</span>
                     <span class="insight-data">Phishing (Email)</span>
                 </div>
                 <div class="insight-row">
-                    <span class="insight-label">Kockázati Szint</span>
+                    <span class="insight-label">Risk Level</span>
                     <span class="insight-data" style="color: var(--danger)">CRITICAL</span>
                 </div>
             </div>
@@ -297,17 +297,17 @@
         <div class="conclusion-grid">
             <div class="action-card" style="--border-color: var(--accent)">
                 <span class="action-icon">🛡️</span>
-                <h3>Pénzügyi Firewall</h3>
+                <h3>Financial Firewall</h3>
                 <p>Dedikált tűzfal és elkülönített hálózati szegmens bevezetése a Finance osztály számára azonnali hatállyal.</p>
             </div>
             <div class="action-card" style="--border-color: var(--danger)">
                 <span class="action-icon">🎓</span>
-                <h3>Phishing Tréning 2.0</h3>
+                <h3>Phishing Training</h3>
                 <p>Kötelező negyedéves oktatás az emberi hibafaktor csökkentésére minden alkalmazottnak.</p>
             </div>
             <div class="action-card" style="--border-color: var(--success)">
                 <span class="action-icon">🤖</span>
-                <h3>AI Detektálás</h3>
+                <h3>AI Detection</h3>
                 <p>Automatizált AI figyelőrendszer a szokatlan tranzakciók kiszűrésére, 24/7 felügyelettel.</p>
             </div>
         </div>
@@ -315,7 +315,7 @@
 
     <footer>
         <p style="margin-bottom: 10px; color: #fff; font-weight: bold; font-size: 1.1rem;">SecurCorp Analytics</p>
-        <p style="opacity: 0.5;">Business Intelligence Project • Student Submission</p>
+        <p style="opacity: 0.5;">Business Intelligence Project</p>
     </footer>
 
     <script type="text/javascript">
@@ -330,7 +330,7 @@
             const m = Math.floor(Math.random() * 12);
             const d = Math.floor(Math.random() * 28) + 1;
             const hour = Math.floor(Math.random() * 24);
-            const dateObj = new Date(2025, m, d, hour); // Adatok 2025-ből
+            const dateObj = new Date(2025, m, d, hour);
             
             let finalHour = hour;
             if (Math.random() > 0.35) {
@@ -364,13 +364,13 @@
             });
         }
 
-        // --- CONFIG ---
-        // Megnövelt betűméretek a jobb olvashatóságért!
+        // --- CONFIG (Better Fonts) ---
         const darkConfig = {
             "background": "transparent",
             "view": {"stroke": "transparent"},
             "title": {"color": "#fff", "fontSize": 20, "anchor": "start", "offset": 20},
             "style": {
+                // Alapértelmezett sans-serif font az Inter helyett az ábrákon (jobb olvashatóság)
                 "guide-label": {"fill": "#94a3b8", "fontSize": 12}, 
                 "guide-title": {"fill": "#fff", "fontWeight": "bold", "fontSize": 14}
             },
@@ -393,7 +393,7 @@
                     // FELSŐ
                     "width": 1250, 
                     "height": 280, 
-                    "title": "Timeline & Costs",
+                    "title": "Idővonal és Költségek (2025)",
                     "mark": {"type": "circle", "opacity": 0.8},
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
                     "encoding": {
@@ -416,7 +416,7 @@
                     "hconcat": [
                         {
                             "width": 600, "height": 250, 
-                            "title": "Attack Types",
+                            "title": "Típusok szerinti eloszlás",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
                             "encoding": {
@@ -427,12 +427,16 @@
                         },
                         {
                             "width": 600, "height": 250, 
-                            "title": "Departments Impacted",
+                            "title": "Érintett Részlegek",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "arc", "innerRadius": 90, "outerRadius": 120},
                             "encoding": {
                                 "theta": {"aggregate": "count", "field": "department"},
-                                "color": {"field": "department", "scale": {"scheme": "category10"}},
+                                "color": {
+                                    "field": "department", 
+                                    "title": "Department", /* Címke nagybetűsítése */
+                                    "scale": {"scheme": "category10"}
+                                },
                                 "tooltip": [{"field": "department"}, {"aggregate": "count"}]
                             }
                         }
@@ -441,15 +445,15 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (Visszaállítva 900px-re a szebb arányokért) ---
+        // --- 2. HEATMAP SPEC (1150px - Szélesített, de arányos) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": 900, 
-            "height": 380,
+            "width": 1150, 
+            "height": 400,
             
-            "title": "Time Intensity Heatmap",
+            "title": "Támadási Intenzitás Hőtérkép",
             "mark": {"type": "rect", "cornerRadius": 2},
             "encoding": {
                 "x": {
@@ -466,7 +470,7 @@
                 },
                 "color": {
                     "aggregate": "count",
-                    "title": "Incidensek",
+                    "title": "Incidents", /* Angol, mert az Hour is angol */
                     "scale": {"scheme": "inferno"}
                 },
                 "tooltip": [
