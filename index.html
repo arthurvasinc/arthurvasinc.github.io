@@ -83,7 +83,7 @@
         /* --- CONTENT LAYOUT --- */
         .story-section {
             width: 90%;
-            max-width: 1400px; /* Szűkebb max szélesség, hogy ne essen szét */
+            max-width: 1400px;
             margin: 120px auto;
         }
 
@@ -103,22 +103,22 @@
             max-width: 800px;
         }
 
-        /* VIZ WRAPPER - Flexbox a középhez igazításhoz */
+        /* VIZ WRAPPER */
         .viz-wrapper {
             background: var(--bg-card);
             border: 1px solid var(--grid-line);
             border-radius: 16px;
-            padding: 30px; /* Nagyobb belső margó */
+            padding: 30px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow: hidden; /* Prevent overflow */
         }
 
         .vega-actions { display: none !important; }
 
-        /* --- INSIGHT CARD (A Hacker szöveg helyett) --- */
+        /* --- INSIGHT CARD --- */
         .insight-card {
             background: linear-gradient(180deg, rgba(56, 189, 248, 0.1) 0%, rgba(30, 41, 59, 0) 100%);
             border: 1px solid rgba(56, 189, 248, 0.2);
@@ -177,7 +177,6 @@
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
-        /* Két oszlopos layout a Heatmap szekcióhoz */
         .grid-2-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -187,7 +186,6 @@
         @media (max-width: 1000px) {
             .grid-2-col { grid-template-columns: 1fr; }
         }
-
     </style>
 </head>
 <body>
@@ -335,10 +333,7 @@
             "legend": {"labelColor": "#94a3b8", "titleColor": "#fff"}
         };
 
-        // --- 1. DASHBOARD SPEC (SZÉLESSÉG IGAZÍTÁS) ---
-        // A TRÜKK: Az alsó két diagram összélességéhez igazítjuk a felsőt.
-        // Ha az alsók kb 400+400px, akkor a felső legyen kb 850px.
-        
+        // --- 1. DASHBOARD SPEC ---
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
@@ -347,7 +342,7 @@
             
             "vconcat": [
                 {
-                    // SCATTER PLOT: Fix szélességet adunk neki, ami megegyezik az alsók összegével
+                    // FELSŐ: 850px Széles
                     "width": 850, 
                     "height": 250, 
                     "title": "Idővonal és Költségek (Interaktív: Húzzon sávot!)",
@@ -366,13 +361,12 @@
                     }
                 },
                 {
-                    // ALSÓ SZEKCIÓ
+                    // ALSÓ: 2x400 + 50 gap = 850px Total
                     "columns": 2,
                     "resolve": {"scale": {"color": "independent"}},
-                    "spacing": 50, // Térköz a két alsó diagram között
+                    "spacing": 50,
                     "hconcat": [
                         {
-                            // BAR CHART
                             "width": 400, "height": 250, 
                             "title": "Típusok (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
@@ -384,7 +378,6 @@
                             }
                         },
                         {
-                            // DONUT CHART
                             "width": 400, "height": 250, 
                             "title": "Részlegek (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
@@ -400,14 +393,14 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC ---
+        // --- 2. HEATMAP SPEC (JAVÍTOTT: FIX SZÉLESSÉG) ---
+        // Itt állítottam be a 850-et, hogy megegyezzen a fentivel!
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": "container",
+            "width": 850, 
             "height": 350,
-            "autosize": {"type": "fit", "contains": "padding"},
             
             "title": "Támadási Intenzitás (Nap vs Óra)",
             "mark": "rect",
@@ -437,7 +430,6 @@
             }
         };
 
-        // Renderelés
         vegaEmbed('#viz-main', mainSpec, {actions: false}).catch(console.error);
         vegaEmbed('#viz-heatmap', heatSpec, {actions: false}).catch(console.error);
 
