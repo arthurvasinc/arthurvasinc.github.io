@@ -14,14 +14,13 @@
 
     <style>
         :root {
-            --bg-body: #0f172a;       /* Mély sötétkék */
-            --bg-section: #1e293b;    /* Szekció háttér */
-            --text-main: #f8fafc;     /* Fehér */
-            --text-muted: #94a3b8;    /* Szürke */
-            --accent: #38bdf8;        /* Kiemelő kék */
-            --danger: #ef4444;        /* Piros */
-            --success: #10b981;       /* Zöld */
-            --glass: rgba(30, 41, 59, 0.7); /* Üveghatás */
+            --bg-body: #0b1120;       /* Deepest Dark Blue */
+            --bg-card: #1e293b;       /* Card Background */
+            --text-main: #f1f5f9;     /* White/Gray text */
+            --text-muted: #94a3b8;    /* Muted text */
+            --accent: #38bdf8;        /* Neon Cyan */
+            --danger: #ef4444;        /* Red */
+            --grid-line: #334155;     /* Dark grid lines */
         }
 
         body {
@@ -30,131 +29,133 @@
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            line-height: 1.7;
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scrollbar issues */
         }
 
-        /* --- HERO SECTION (Címlap) --- */
+        /* --- HERO SECTION --- */
         header {
-            height: 80vh; /* Majdnem teljes képernyő */
+            min-height: 90vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            border-bottom: 1px solid #334155;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0b1120 100%);
             padding: 20px;
+            border-bottom: 1px solid var(--grid-line);
         }
 
-        h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
-        h1 span { color: var(--accent); }
-        .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 40px; }
+        h1 { 
+            font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsive font size */
+            font-weight: 800; 
+            margin-bottom: 10px; 
+            letter-spacing: -2px;
+            background: -webkit-linear-gradient(0deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 50px; }
 
-        /* KPI Grid a Hero-ban */
+        /* KPI Cards */
         .hero-kpi {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            max-width: 900px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             width: 100%;
+            max-width: 1000px;
         }
 
         .kpi-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.4); /* Glass effect */
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 16px;
             backdrop-filter: blur(10px);
-            transition: transform 0.3s;
         }
-        .kpi-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .kpi-val { font-size: 2.5rem; font-weight: 700; color: var(--text-main); }
-        .kpi-lbl { text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: var(--text-muted); }
+        
+        .kpi-val { font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .kpi-lbl { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; color: var(--accent); }
 
-        /* --- TARTALOM BLOKKOK (Storytelling) --- */
+        /* --- STORY SECTIONS --- */
         .story-section {
-            max-width: 1200px;
-            margin: 100px auto; /* Nagy térköz a görgetéshez */
-            padding: 0 20px;
+            width: 90%;
+            max-width: 1600px; /* Wider layout */
+            margin: 100px auto;
         }
 
-        .section-header {
-            margin-bottom: 40px;
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
             border-left: 4px solid var(--accent);
             padding-left: 20px;
         }
-
-        .section-header h2 { font-size: 2rem; margin: 0 0 10px 0; }
-        .section-header p { font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 0; }
-
-        /* Vizualizációs dobozok */
-        .viz-container {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        /* --- TEXT & CODE KOMBINÁCIÓ --- */
-        .text-code-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
         
-        .code-snippet {
-            background: #000;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: #a5f3fc;
-            border: 1px solid #333;
-        }
-
-        /* Scroll Indicator */
-        .scroll-hint {
-            margin-top: 50px;
-            font-size: 0.9rem;
+        .section-desc {
+            font-size: 1.1rem;
             color: var(--text-muted);
-            animation: bounce 2s infinite;
+            margin-bottom: 30px;
+            padding-left: 20px;
+            max-width: 800px;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+        /* --- VIZ CONTAINER (DARK MODE) --- */
+        .viz-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--grid-line);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
+
+        /* Remove default Vega actions link placement issue */
+        .vega-actions { display: none; }
+
+        /* Code Block */
+        .code-display {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #10b981; /* Hacker Green */
+            overflow-x: auto;
+        }
+
+        /* Scroll Hint */
+        .scroll-down {
+            margin-top: 60px;
+            font-size: 2rem;
+            color: var(--text-muted);
+            animation: float 2s infinite ease-in-out;
+            cursor: pointer;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
         /* Footer */
         footer {
+            padding: 40px;
             text-align: center;
-            padding: 50px;
             color: var(--text-muted);
             font-size: 0.9rem;
-            border-top: 1px solid #333;
-            margin-top: 100px;
+            border-top: 1px solid var(--grid-line);
         }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .hero-kpi { grid-template-columns: 1fr; }
-            .text-code-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>SecurCorp <span>Intelligence</span></h1>
-        <p class="subtitle">Éves IT Biztonsági Jelentés és Kockázatelemzés</p>
+        <p class="subtitle">Globális Kiberbiztonsági Kockázatelemzés és Trendek</p>
         
         <div class="hero-kpi">
             <div class="kpi-card">
-                <div class="kpi-val">1,204</div>
-                <div class="kpi-lbl">Incidens idén</div>
+                <div class="kpi-val">1,240</div>
+                <div class="kpi-lbl">Incidens / Év</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-val" style="color: var(--danger);">$2.4M</div>
@@ -162,111 +163,86 @@
             </div>
             <div class="kpi-card">
                 <div class="kpi-val" style="color: var(--accent);">Finance</div>
-                <div class="kpi-lbl">Kritikus Pont</div>
+                <div class="kpi-lbl">Legtöbb Kockázat</div>
             </div>
         </div>
 
-        <div class="scroll-hint">↓ Görgessen az elemzéshez ↓</div>
+        <div class="scroll-down">↓</div>
     </header>
 
     <section class="story-section">
-        <div class="section-header">
-            <h2>1. Fejezet: A Kockázati Mátrix</h2>
-            <p>
-                Az adatok mélyebb vizsgálata feltárja a mintázatokat. Használja az interaktív felületet 
-                az időszakok és típusok közötti összefüggések elemzésére.
-                <br><strong>Interakció:</strong> Húzzon egy sávot a felső (Timeline) diagramon!
+        <h2 class="section-title">1. A Kockázati Mátrix</h2>
+        <p class="section-desc">
+            Interaktív elemzés: A lenti diagramok <strong>össze vannak kötve</strong>. 
+            Jelöljön ki egy időszakot a felső (Scatter) diagramon az egérrel (húzás), 
+            és figyelje meg, hogyan változnak az alsó adatok!
+        </p>
+        
+        <div class="viz-wrapper" id="viz-main"></div>
+    </section>
+
+    <section class="story-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div>
+            <h2 class="section-title" style="border-color: var(--danger);">2. Támadói Mintázatok</h2>
+            <p class="section-desc">
+                Mikor vagyunk a legsebezhetőbbek?
+                <br><br>
+                A <strong>Hőtérkép (Heatmap)</strong> megmutatja a támadások intenzitását napokra és órákra bontva. 
+                Jól látható a sötétebb zóna a munkaidőben (09:00 - 17:00), ami célzott, humán eredetű támadásokra utal.
             </p>
-        </div>
-
-        <div class="viz-container" id="viz-main"></div>
-    </section>
-
-    <section class="story-section">
-        <div class="text-code-grid">
-            <div>
-                <div class="section-header" style="border-color: var(--success);">
-                    <h2>2. Fejezet: Működési Mintázatok</h2>
-                    <p>
-                        A támadások időbeli eloszlása nem véletlenszerű. A Hőtérkép (Heatmap) 
-                        segítségével láthatóvá válik a támadók munkarendje.
-                    </p>
-                    <p>
-                        A legtöbb incidens <strong>Hétköznap, 09:00 és 17:00 között</strong> történik.
-                        Ez arra utal, hogy nem automatizált botok, hanem <em>Social Engineering</em> 
-                        (megtévesztés) alapú támadások érik a kollégákat munkaidőben.
-                    </p>
-                </div>
-            </div>
-            <div class="viz-container" id="viz-heatmap" style="min-height: 300px;"></div>
-        </div>
-    </section>
-
-    <section class="story-section">
-        <div class="text-code-grid">
-            <div class="code-snippet">
-// Adatmodell (Sample)
+            <div class="code-display">
+// JSON Adatpont Minta
 {
-  "timestamp": "2023-11-04T14:30:00",
-  "department": "Finance",
-  "attack_type": "Phishing",
-  "severity": "Critical",
-  "day_of_week": "Wednesday",
-  "hour": 14
+  "date": "2023-11-04",
+  "day": "Wednesday",
+  "hour": 14,
+  "type": "Phishing",
+  "dept": "Finance"
 }
             </div>
-            <div>
-                <h2>Technikai Dokumentáció</h2>
-                <p style="color: var(--text-muted);">
-                    A projekt megfelel a "Tidy Data" elveknek. Az adatok tisztítása Python környezetben történt, 
-                    majd JSON formátumban került integrálásra a Vega-Lite motor alá.
-                    <br><br>
-                    A vizualizációk <em>declarative grammar</em> alapúak, támogatják a kétirányú interakciót (Linked Brushing).
-                </p>
-            </div>
         </div>
+        <div class="viz-wrapper" id="viz-heatmap"></div>
     </section>
 
     <footer>
-        SecurCorp Analytics Project • Business Intelligence Course • Week 10
+        SecurCorp Analytics • Business Intelligence Project • Week 10 Integration
     </footer>
 
     <script type="text/javascript">
         
-        // --- 1. ADATGENERÁLÁS (Bővített) ---
-        // Most már órát (hour) és napot (day) is generálunk a Heatmaphez
+        // --- 1. ADATGENERÁLÁS ---
         const dataPoints = [];
         const depts = ['IT', 'HR', 'Finance', 'Sales', 'Marketing'];
         const types = ['Phishing', 'Malware', 'DDoS', 'Ransomware', 'Social Eng'];
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
 
-        for(let i=0; i<1000; i++) { // 1000 adatpont a követelmény szerint
-            // Dátum generálás
+        for(let i=0; i<1000; i++) {
             const m = Math.floor(Math.random() * 12);
             const d = Math.floor(Math.random() * 28) + 1;
-            const hour = Math.floor(Math.random() * 24); // 0-23 óra
+            const hour = Math.floor(Math.random() * 24);
             
+            // Dátum és Nap
             const dateObj = new Date(2023, m, d, hour);
             const dateStr = dateObj.toISOString().split('T')[0];
-            const dayName = days[dateObj.getDay()];
+            const dayName = days[dateObj.getDay() === 0 ? 6 : dateObj.getDay() - 1]; // JS: 0=Vasárnap
 
             const dept = depts[Math.floor(Math.random() * depts.length)];
             let type = types[Math.floor(Math.random() * types.length)];
             let severity = "Low";
-            let cost = Math.floor(Math.random() * 5000);
+            let cost = Math.floor(Math.random() * 5000) + 500;
 
-            // MANIPULÁLT ADATOK A SZTORIHOZ (Heatmap logika)
-            // A támadások zöme munkaidőben van (9-17) hétköznap
-            let adjustedHour = hour;
-            if (Math.random() > 0.3) { // 70% esély, hogy munkaidőbe rakjuk
-                adjustedHour = Math.floor(Math.random() * (17 - 9 + 1)) + 9;
+            // SZTORI LOGIKA
+            // 1. Munkaidő sűrűsítése a heatmaphez
+            let finalHour = hour;
+            if (Math.random() > 0.4) {
+                finalHour = Math.floor(Math.random() * (16 - 9 + 1)) + 9; // 09:00 - 16:00
             }
 
-            // Pénzügy = Kritikus
+            // 2. Finance = Drága
             if (dept === 'Finance' && Math.random() > 0.5) { 
                 type = 'Ransomware'; 
                 severity = 'Critical';
-                cost *= 10; 
+                cost *= 8;
             }
 
             dataPoints.push({
@@ -276,20 +252,40 @@
                 severity: severity,
                 cost: cost,
                 day: dayName,
-                hour: adjustedHour // Fontos a Heatmaphez
+                hour: finalHour
             });
         }
 
-        // --- 2. FŐ DASHBOARD SPEC (Scatter + Bar + Donut) ---
+        // --- DARK THEME KONFIGURÁCIÓ (Hogy ne legyen fehér doboz) ---
+        const darkConfig = {
+            "background": "transparent", // Átlátszó háttér
+            "view": {"stroke": "transparent"},
+            "title": {"color": "#fff", "fontSize": 16},
+            "style": {"guide-label": {"fill": "#94a3b8"}, "guide-title": {"fill": "#fff"}},
+            "axis": {
+                "domainColor": "#334155", 
+                "gridColor": "#334155", 
+                "tickColor": "#334155", 
+                "labelColor": "#94a3b8", 
+                "titleColor": "#f8fafc"
+            },
+            "legend": {
+                "labelColor": "#94a3b8", 
+                "titleColor": "#fff"
+            }
+        };
+
+        // --- 1. MAIN DASHBOARD SPEC ---
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
-            "background": "white",
-            "padding": 20,
+            "config": darkConfig,
+            "width": "container", // Reszponzív szélesség
             "vconcat": [
                 {
-                    "width": "container", "height": 200,
-                    "title": "Incidensek Idővonala (Jelölj ki!)",
+                    // SCATTER PLOT
+                    "height": 250,
+                    "title": "Idővonal és Költségek (Interaktív Szűrő: Húzzon sávot!)",
                     "mark": "circle",
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
                     "encoding": {
@@ -300,29 +296,39 @@
                             "scale": {"domain": ["Low", "Medium", "High", "Critical"], "range": ["#10b981", "#f59e0b", "#f97316", "#ef4444"]},
                             "legend": {"title": "Súlyosság"}
                         },
-                        "size": {"value": 50},
+                        "size": {"value": 60},
                         "tooltip": [{"field": "department"}, {"field": "cost"}]
                     }
                 },
                 {
+                    "columns": 2, // Két oszlopba rendezi az alsókat
+                    "resolve": {"scale": {"color": "independent"}},
                     "hconcat": [
                         {
-                            "width": 300, "height": 200, "title": "Típusok",
+                            // BAR CHART
+                            "width": 400, "height": 250, 
+                            "title": "Támadási Típusok (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
                             "encoding": {
                                 "y": {"field": "type", "type": "nominal", "title": null, "sort": "-x"},
-                                "x": {"aggregate": "count", "title": "Darab"},
-                                "color": {"value": "#3b82f6"}
+                                "x": {"aggregate": "count", "title": "Esetszám"},
+                                "color": {"value": "#38bdf8"} // Neon Blue
                             }
                         },
                         {
-                            "width": 300, "height": 200, "title": "Részlegek",
+                            // DONUT CHART
+                            "width": 400, "height": 250, 
+                            "title": "Érintett Részlegek (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
-                            "mark": {"type": "arc", "innerRadius": 50},
+                            "mark": {"type": "arc", "innerRadius": 60},
                             "encoding": {
                                 "theta": {"aggregate": "count", "field": "department"},
-                                "color": {"field": "department", "scale": {"scheme": "category10"}},
+                                "color": {
+                                    "field": "department", 
+                                    "scale": {"scheme": "category10"},
+                                    "legend": {"title": "Részleg"}
+                                },
                                 "tooltip": [{"field": "department"}, {"aggregate": "count"}]
                             }
                         }
@@ -331,42 +337,40 @@
             ]
         };
 
-        // --- 3. HEATMAP SPEC (Új!) ---
+        // --- 2. HEATMAP SPEC ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
+            "config": darkConfig,
             "width": "container",
             "height": 300,
-            "background": "white",
+            "title": "Támadási Intenzitás (Nap vs Óra)",
             "mark": "rect",
             "encoding": {
-                "x": {"field": "hour", "type": "ordinal", "title": "Óra (0-23)"},
+                "x": {"field": "hour", "type": "ordinal", "title": "Óra (00-23)"},
                 "y": {
                     "field": "day", 
                     "type": "nominal", 
-                    "title": "Nap", 
-                    "sort": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                    "title": null, 
+                    "sort": ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"]
                 },
                 "color": {
                     "aggregate": "count",
-                    "type": "quantitative",
-                    "title": "Támadások száma",
-                    "scale": {"scheme": "reds"} // Minél sötétebb piros, annál több támadás
+                    "title": "Incidensek",
+                    "scale": {"scheme": "inferno"} // Drámai színek (fekete->narancs->sárga)
                 },
                 "tooltip": [
                     {"field": "day", "title": "Nap"},
                     {"field": "hour", "title": "Óra"},
-                    {"aggregate": "count", "title": "Incidensek"}
+                    {"aggregate": "count", "title": "Darab"}
                 ]
-            },
-            "config": {
-                "axis": {"grid": true, "tickBand": "extent"}
             }
         };
 
         // --- RENDER ---
-        vegaEmbed('#viz-main', mainSpec, {actions: false});
-        vegaEmbed('#viz-heatmap', heatSpec, {actions: false});
+        // Fontos: a theme 'null' legyen, hogy a saját configunk érvényesüljön
+        vegaEmbed('#viz-main', mainSpec, {actions: false}).catch(console.error);
+        vegaEmbed('#viz-heatmap', heatSpec, {actions: false}).catch(console.error);
 
     </script>
 </body>
