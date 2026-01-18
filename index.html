@@ -14,31 +14,22 @@
 
     <style>
         :root {
-            --bg-body: #0f172a;       /* Sötétebb, mélyebb kék */
+            --bg-body: #0f172a;       
             --bg-card: #1e293b;       
             --text-main: #f8fafc;     
             --text-muted: #94a3b8;    
-            --accent: #38bdf8;        /* Cyan */
+            --accent: #38bdf8;        
             --accent-glow: rgba(56, 189, 248, 0.3);
             --danger: #ef4444;        
             --success: #10b981;       
             --grid-line: #334155;     
         }
 
-        /* --- CUSTOM SCROLLBAR (A Cherry on Top!) --- */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-body); 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155; 
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent); 
-        }
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -58,7 +49,6 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            /* Finomabb, mélyebb gradiens */
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 80%);
             padding: 20px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -70,7 +60,6 @@
             font-weight: 800; 
             margin-bottom: 15px; 
             letter-spacing: -2px;
-            /* Elegáns szöveg gradiens */
             background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -87,7 +76,7 @@
             opacity: 0.9;
         }
 
-        /* KPI Kártyák - Finom lebegés */
+        /* KPI Kártyák */
         .hero-kpi {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -108,7 +97,7 @@
         .kpi-card:hover { 
             transform: translateY(-8px); 
             border-color: var(--accent); 
-            box-shadow: 0 15px 30px rgba(56, 189, 248, 0.1); /* Kék ragyogás */
+            box-shadow: 0 15px 30px rgba(56, 189, 248, 0.1); 
         }
         
         .kpi-val { font-size: 2.8rem; font-weight: 800; color: #fff; margin-bottom: 5px; letter-spacing: -1px; }
@@ -139,16 +128,15 @@
             line-height: 1.7;
         }
 
-        /* VIZUALIZÁCIÓS KERET (A Glow Effect) */
+        /* VIZUALIZÁCIÓS KERET */
         .viz-wrapper {
-            background: rgba(30, 41, 59, 0.5); /* Átlátszóbb */
+            background: rgba(30, 41, 59, 0.5); 
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 20px;
             padding: 40px; 
-            /* Ez a finom ragyogás adja a "Premium" érzést */
             box-shadow: 0 0 50px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
             display: flex;
-            justify-content: center;
+            justify-content: center; /* Ez tartja középen a diagramot */
             align-items: center;
             overflow: hidden;
             backdrop-filter: blur(5px);
@@ -156,7 +144,7 @@
 
         .vega-actions { display: none !important; }
 
-        /* --- INSIGHT CARD (High Tech Look) --- */
+        /* --- INSIGHT CARD --- */
         .insight-card {
             background: linear-gradient(180deg, rgba(56, 189, 248, 0.08) 0%, rgba(15, 23, 42, 0) 100%);
             border: 1px solid var(--accent-glow);
@@ -165,7 +153,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* Díszítő csík */
         .insight-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent);
         }
@@ -244,12 +231,12 @@
 
     <header>
         <h1>SecurCorp <span>Intelligence</span></h1>
-        <p class="subtitle">2026 Annual Security Report</p>
+        <p class="subtitle">Security & Risk Report 2026</p>
         
         <div class="hero-kpi">
             <div class="kpi-card">
                 <div class="kpi-val">1,240</div>
-                <div class="kpi-lbl">Incidens (2025)</div>
+                <div class="kpi-lbl">Incidens</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-val" style="color: var(--danger);">$2.4M</div>
@@ -264,9 +251,9 @@
     </header>
 
     <section class="story-section">
-        <h2 class="section-title">1. A Kockázati Mátrix</h2>
+        <h2 class="section-title">1. Risk Matrix</h2>
         <p class="section-desc">
-            Az elmúlt év (2025) adatainak elemzése. Az alábbi interaktív felület összefüggéseket tár fel az incidensek időpontja, költsége és típusa között.
+            Az alábbi interaktív felület összefüggéseket tár fel az incidensek időpontja, költsége és típusa között.
             <br><span style="color: var(--accent)">Használat:</span> Jelöljön ki egy időszakot a felső diagramon (húzás bal gombbal)!
         </p>
         
@@ -276,7 +263,7 @@
     <section class="story-section">
         <div class="grid-2-col" style="margin-bottom: 30px;">
             <div>
-                <h2 class="section-title" style="border-color: var(--danger);">2. Támadói Mintázatok</h2>
+                <h2 class="section-title" style="border-color: var(--danger);">2. Attack Patterns</h2>
                 <p class="section-desc" style="padding-left: 0; margin-left: 25px;">
                     A Heatmap elemzés rávilágít, hogy a támadások <strong>munkaidőben (09:00 - 17:00)</strong> koncentrálódnak.
                     Ez megerősíti a gyanút, hogy a hackerek a dolgozók figyelmetlenségére építenek (Social Engineering).
@@ -285,7 +272,7 @@
             
             <div class="insight-card">
                 <div style="text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 20px; font-weight: 700; font-size: 0.9rem;">
-                    ⚠️ AI Threat Analysis (2026 Q1)
+                    ⚠️ AI Threat Analysis (Automated)
                 </div>
                 <div class="insight-row">
                     <span class="insight-label">Legveszélyesebb Idősáv</span>
@@ -306,7 +293,7 @@
     </section>
 
     <section class="story-section">
-        <h2 class="section-title" style="border-color: var(--success);">3. Stratégiai Lépések (2026)</h2>
+        <h2 class="section-title" style="border-color: var(--success);">3. Strategic Action Plan</h2>
         <div class="conclusion-grid">
             <div class="action-card" style="--border-color: var(--accent)">
                 <span class="action-icon">🛡️</span>
@@ -328,12 +315,12 @@
 
     <footer>
         <p style="margin-bottom: 10px; color: #fff; font-weight: bold; font-size: 1.1rem;">SecurCorp Analytics</p>
-        <p style="opacity: 0.5;">Confidential Report • Generated for CISO Review</p>
+        <p style="opacity: 0.5;">Business Intelligence Project • Student Submission</p>
     </footer>
 
     <script type="text/javascript">
         
-        // --- ADATGENERÁLÁS (2025-ös ÉVRE) ---
+        // --- ADATGENERÁLÁS ---
         const dataPoints = [];
         const depts = ['IT', 'HR', 'Finance', 'Sales', 'Marketing'];
         const types = ['Phishing', 'Malware', 'DDoS', 'Ransomware', 'Social Eng'];
@@ -343,8 +330,7 @@
             const m = Math.floor(Math.random() * 12);
             const d = Math.floor(Math.random() * 28) + 1;
             const hour = Math.floor(Math.random() * 24);
-            // 2025-ös dátum generálása
-            const dateObj = new Date(2025, m, d, hour);
+            const dateObj = new Date(2025, m, d, hour); // Adatok 2025-ből
             
             let finalHour = hour;
             if (Math.random() > 0.35) {
@@ -354,7 +340,6 @@
             let dept = depts[Math.floor(Math.random() * depts.length)];
             let type = types[Math.floor(Math.random() * types.length)];
             
-            // Szín logika
             let rand = Math.random();
             let severity = "Low";
             if (rand > 0.4) severity = "Medium"; 
@@ -379,20 +364,21 @@
             });
         }
 
-        // --- DARK THEME CONFIG (Profi Vega Beállítások) ---
+        // --- CONFIG ---
+        // Megnövelt betűméretek a jobb olvashatóságért!
         const darkConfig = {
             "background": "transparent",
             "view": {"stroke": "transparent"},
-            "title": {"color": "#fff", "fontSize": 18, "anchor": "start", "offset": 20},
+            "title": {"color": "#fff", "fontSize": 20, "anchor": "start", "offset": 20},
             "style": {
-                "guide-label": {"fill": "#94a3b8", "font": "Inter"}, 
-                "guide-title": {"fill": "#fff", "font": "Inter", "fontWeight": "bold"}
+                "guide-label": {"fill": "#94a3b8", "fontSize": 12}, 
+                "guide-title": {"fill": "#fff", "fontWeight": "bold", "fontSize": 14}
             },
             "axis": {
                 "domainColor": "#334155", "gridColor": "rgba(51, 65, 85, 0.5)", "tickColor": "#334155", 
                 "labelColor": "#94a3b8", "titleColor": "#f8fafc"
             },
-            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff"}
+            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff", "labelFontSize": 12}
         };
 
         // --- 1. DASHBOARD SPEC (1250px) ---
@@ -404,19 +390,19 @@
             
             "vconcat": [
                 {
-                    // FELSŐ: 1250px
+                    // FELSŐ
                     "width": 1250, 
                     "height": 280, 
-                    "title": "Idővonal és Költségek (2025)",
+                    "title": "Timeline & Costs",
                     "mark": {"type": "circle", "opacity": 0.8},
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
                     "encoding": {
                         "x": {"field": "date", "type": "temporal", "title": null, "axis": {"format": "%Y %b", "tickCount": 12}},
-                        "y": {"field": "cost", "type": "quantitative", "title": "Kár ($)"},
+                        "y": {"field": "cost", "type": "quantitative", "title": "Cost ($)"},
                         "color": {
                             "field": "severity",
                             "scale": {"domain": ["Low", "Medium", "High", "Critical"], "range": ["#10b981", "#f59e0b", "#f97316", "#ef4444"]},
-                            "legend": {"title": "Súlyosság"}
+                            "legend": {"title": "Severity"}
                         },
                         "size": {"value": 100},
                         "tooltip": [{"field": "department"}, {"field": "cost", "format": "$"}]
@@ -430,18 +416,18 @@
                     "hconcat": [
                         {
                             "width": 600, "height": 250, 
-                            "title": "Típusok szerinti eloszlás",
+                            "title": "Attack Types",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
                             "encoding": {
                                 "y": {"field": "type", "type": "nominal", "title": null, "sort": "-x"},
-                                "x": {"aggregate": "count", "title": "Incidensek száma"},
+                                "x": {"aggregate": "count", "title": "Count"},
                                 "color": {"value": "#38bdf8"}
                             }
                         },
                         {
                             "width": 600, "height": 250, 
-                            "title": "Érintett Részlegek",
+                            "title": "Departments Impacted",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "arc", "innerRadius": 90, "outerRadius": 120},
                             "encoding": {
@@ -455,21 +441,21 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (1250px) ---
+        // --- 2. HEATMAP SPEC (Visszaállítva 900px-re a szebb arányokért) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": 1250, 
+            "width": 900, 
             "height": 380,
             
-            "title": "Támadási Intenzitás Hőtérkép (2025)",
+            "title": "Time Intensity Heatmap",
             "mark": {"type": "rect", "cornerRadius": 2},
             "encoding": {
                 "x": {
                     "field": "hour", 
                     "type": "ordinal", 
-                    "title": "Óra (00-23)",
+                    "title": "Hour (00-23)",
                     "axis": {"labelAngle": 0}
                 },
                 "y": {
