@@ -3,218 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiberbiztonsági Műszerfal - Projekt Integráció</title>
-
+    <title>Global Cyber Threat Intelligence</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
     <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-main: #1a1a1a;
-            --text-light: #65676b;
-            --accent: #1877f2;
-        }
+        body { font-family: 'Roboto', sans-serif; background: #f4f6f8; margin: 0; color: #333; }
+        
+        .header { background: #2c3e50; color: white; padding: 2rem; text-align: center; }
+        .header h1 { margin: 0; font-size: 2.5rem; }
+        .header p { opacity: 0.8; margin-top: 10px; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-        }
-
-        .header {
-            max-width: 1000px;
-            margin: 0 auto 30px;
-            text-align: center;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .header h1 { margin: 0 0 10px; color: var(--accent); }
-        .header p { color: var(--text-light); max-width: 700px; margin: 0 auto; }
-
-        .dashboard-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .full-width {
-                grid-column: span 2;
-            }
-        }
-
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        
         .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
         }
 
-        .card h3 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .card p.desc { font-size: 0.9em; color: var(--text-light); margin-bottom: 15px; }
+        .card h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; color: #2c3e50; }
+        .explanation { background: #e8f4fd; padding: 15px; border-left: 4px solid #3498db; margin-bottom: 20px; font-size: 0.9rem; }
         
-        .vis-container { width: 100%; }
+        #viz-container { width: 100%; overflow-x: auto; }
         
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--text-light);
-            font-size: 0.8em;
-        }
+        .tech-docs { font-family: monospace; background: #f1f1f1; padding: 15px; border-radius: 5px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <h1>Vállalati Biztonsági Elemzés 2024</h1>
-        <p>
-            Ez a műszerfal <strong>1000 szimulált biztonsági incidenst</strong> elemez. 
-            A cél: azonosítani, melyik osztály a leggyengébb láncszem.
-            <br><em>(10. hét: Integrált Adatvizualizáció)</em>
-        </p>
+        <h1>Global Cyber Threat Intelligence</h1>
+        <p>Integrált Vállalati Biztonsági Elemzés (2023-2024)</p>
     </header>
 
-    <main class="dashboard-grid">
+    <main class="container">
         
-        <section class="card full-width">
-            <h3>1. Kockázat Osztályok Szerint (Vezérlő)</h3>
-            <p class="desc">
-                <strong>INTERAKTÍV:</strong> Kattints valamelyik oszlopra (pl. "Finance"), hogy az egész oldalt leszűrd arra az osztályra! 
-                Látható, hogy bár az IT kezeli a legtöbb esetet, a Pénzügyön magas a kritikus hibák aránya.
-            </p>
-            <div id="vis_dept" class="vis-container"></div>
+        <section class="card">
+            <h2>Projekt Összefoglaló</h2>
+            <p>Ez a projekt egy nemzetközi vállalat biztonsági incidenseit elemzi. Az adatok tisztítása Python (Pandas) segítségével történt, a vizualizációk pedig a Vega-Lite specifikációs nyelven készültek, támogatva az interaktív adatelemzést.</p>
         </section>
 
         <section class="card">
-            <h3>2. Incidensek Időbeli Eloszlása</h3>
-            <p class="desc">Mikor történnek a támadások? Ha fent kiválasztasz egy osztályt, itt látod az ő specifikus trendjüket.</p>
-            <div id="vis_trend" class="vis-container"></div>
+            <h2>Interaktív Költségelemzés</h2>
+            <div class="explanation">
+                <strong>Hogyan használd:</strong> A felső diagramon ("Scatter Plot") tarts nyomva a bal egérgombot és húzz egy téglalapot (Brush) egy időszak kijelöléséhez. Az alsó oszlopdiagram automatikusan frissül, hogy csak a kijelölt időszak támadási típusait mutassa.
+            </div>
+            <div id="viz-interactive"></div>
         </section>
 
         <section class="card">
-            <h3>3. Támadási Típusok Aránya</h3>
-            <p class="desc">Milyen jellegű támadások érik a kiválasztott osztályt? (Phishing, Malware, stb.)</p>
-            <div id="vis_type" class="vis-container"></div>
+            <h2>Technikai Dokumentáció</h2>
+            <p>A projekt az alábbi lépésekkel készült a 10. heti követelményeknek megfelelően:</p>
+            <ul class="tech-docs">
+                <li><strong>Adatforrás:</strong> Kaggle Cybersecurity Dataset (szimulált).</li>
+                <li><strong>Adattranszformáció (Python):</strong> A nyers logfájlokat a `data_process.py` script alakította át "Tidy Data" (soralapú JSON) formátumba. A `severity` mező kategorikus, a `cost` numerikus változó.</li>
+                <li><strong>Vizualizáció (Vega-Lite):</strong> A diagramok deklaratív JSON specifikációk. Használt technikák: `vconcat` (függőleges összefűzés), `selection: interval` (interaktív szűrés), `transform: filter` (adatok dinamikus szűrése).</li>
+            </ul>
         </section>
 
     </main>
 
-    <footer class="footer">
-        Készítette: Arthur Vasinc | Business Intelligence Projekt | Generált adatpontok: 1000 db
-    </footer>
-
     <script type="text/javascript">
-        function generateData(count) {
-            const data = [];
-            const departments = ['IT', 'HR', 'Finance', 'Marketing', 'Sales'];
-            const types = ['Phishing', 'Malware', 'Ransomware', 'DDoS', 'Social Eng.'];
-            const severities = ['Low', 'Medium', 'High', 'Critical'];
-            
-            const start = new Date(2023, 0, 1);
-            const end = new Date(2023, 11, 31);
-            
-            for (let i = 0; i < count; i++) {
-                const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-                
-                const dept = departments[Math.floor(Math.random() * departments.length)];
-                let type = types[Math.floor(Math.random() * types.length)];
-                
-                if(dept === 'Finance' && Math.random() > 0.6) {
-                    type = 'Ransomware';
-                }
-
-                data.push({
-                    "id": i,
-                    "date": date.toISOString().split('T')[0],
-                    "department": dept,
-                    "type": type,
-                    "severity": severities[Math.floor(Math.random() * severities.length)],
-                    "cost": Math.floor(Math.random() * 5000) + 100
-                });
-            }
-            return data;
-        }
-
-        const rawData = generateData(1000);
-        console.log("Generált adatok (első 5 sor):", rawData.slice(0, 5));
-
-        
-        const commonData = { "values": rawData };
-
-        const specDept = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "width": "container", "height": 200,
-            "data": commonData,
-            "selection": {
-                "deptFilter": {
-                    "type": "point", 
-                    "fields": ["department"]
-                }
-            },
-            "mark": {"type": "bar", "cornerRadius": 5},
-            "encoding": {
-                "x": {"field": "department", "type": "nominal", "title": "Részleg"},
-                "y": {"aggregate": "count", "title": "Incidensek Száma"},
-                "color": {
-                    "condition": {"selection": "deptFilter", "value": "#1877f2"},
-                    "value": "lightgray"
-                },
-                "tooltip": [{"field": "department"}, {"aggregate": "count", "title": "Darab"}]
-            },
-            "title": "Kattints egy oszlopra a szűréshez!"
-        };
-
-        const specTrend = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "width": "container", "height": 250,
-            "data": commonData,
-            "transform": [
-                {"filter": {"selection": "deptFilter"}}
-            ],
-            "mark": {"type": "line", "point": true},
-            "encoding": {
-                "x": {"field": "date", "type": "temporal", "timeUnit": "yearmonth", "title": "Hónap"},
-                "y": {"aggregate": "count", "title": "Incidensek"},
-                "color": {"value": "#ff5722"}
-            }
-        };
-
-        const specType = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "width": "container", "height": 250,
-            "data": commonData,
-            "transform": [
-                {"filter": {"selection": "deptFilter"}}
-            ],
-            "mark": "arc",
-            "encoding": {
-                "theta": {"aggregate": "count", "field": "type"},
-                "color": {"field": "type", "title": "Támadás típusa"},
-                "tooltip": [{"field": "type"}, {"aggregate": "count", "title": "Darab"}]
-            }
-        };
-
-        vegaEmbed('#vis_dept', specDept);
-        vegaEmbed('#vis_trend', specTrend);
-        vegaEmbed('#vis_type', specType);
-
+        // Specifikáció betöltése külső fájlból
+        vegaEmbed('#viz-interactive', 'viz_interactive.json')
+            .then(function(result) {
+                console.log("Vizualizáció sikeresen betöltve");
+            })
+            .catch(console.error);
     </script>
+
 </body>
 </html>
