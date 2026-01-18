@@ -83,7 +83,7 @@
         /* --- CONTENT LAYOUT --- */
         .story-section {
             width: 90%;
-            max-width: 1600px;
+            max-width: 1400px; /* Szűkebb max szélesség, hogy ne essen szét */
             margin: 120px auto;
         }
 
@@ -103,26 +103,44 @@
             max-width: 800px;
         }
 
+        /* VIZ WRAPPER - Flexbox a középhez igazításhoz */
         .viz-wrapper {
             background: var(--bg-card);
             border: 1px solid var(--grid-line);
             border-radius: 16px;
-            padding: 20px;
+            padding: 30px; /* Nagyobb belső margó */
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            /* Fontos: flexbox, hogy a tartalom kitöltse */
             display: flex;
             justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
-        /* Vega Embed Stílus javítás */
-        .vega-embed {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
         .vega-actions { display: none !important; }
 
-        /* --- RECOMMENDATIONS --- */
+        /* --- INSIGHT CARD (A Hacker szöveg helyett) --- */
+        .insight-card {
+            background: linear-gradient(180deg, rgba(56, 189, 248, 0.1) 0%, rgba(30, 41, 59, 0) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .insight-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .insight-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .insight-label { color: var(--text-muted); font-size: 0.9rem; }
+        .insight-data { color: #fff; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .trend-up { color: var(--danger); }
+
+        /* --- ACTION CARDS --- */
         .conclusion-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -158,6 +176,18 @@
             cursor: pointer;
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+        /* Két oszlopos layout a Heatmap szekcióhoz */
+        .grid-2-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        @media (max-width: 1000px) {
+            .grid-2-col { grid-template-columns: 1fr; }
+        }
+
     </style>
 </head>
 <body>
@@ -190,23 +220,35 @@
             <br><span style="color: var(--accent)">Használat:</span> Jelöljön ki egy időszakot a felső diagramon (húzás bal gombbal)!
         </p>
         
-        <div class="viz-wrapper" id="viz-main"></div>
+        <div class="viz-wrapper" id="viz-main" style="min-height: 550px;"></div>
     </section>
 
     <section class="story-section">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 30px;">
+        <div class="grid-2-col" style="margin-bottom: 30px;">
             <div>
                 <h2 class="section-title" style="border-color: var(--danger);">2. Támadói Mintázatok</h2>
                 <p class="section-desc" style="padding-left: 0; margin-left: 20px;">
                     A Heatmap elemzés rávilágít, hogy a támadások <strong>munkaidőben (09:00 - 17:00)</strong> koncentrálódnak.
+                    Ez megerősíti a gyanút, hogy a hackerek a dolgozók figyelmetlenségére építenek (Social Engineering).
                 </p>
             </div>
-            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border: 1px dashed var(--grid-line);">
-                <code style="color: #10b981; font-family: 'JetBrains Mono'">
-                    >> ANALYZING PATTERNS...<br>
-                    >> DETECTED: HIGH ACTIVITY @ 14:00<br>
-                    >> STATUS: CONFIRMED
-                </code>
+            
+            <div class="insight-card">
+                <div style="text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 15px; font-weight: bold;">
+                    ⚠️ Automated Analysis Report
+                </div>
+                <div class="insight-row">
+                    <span class="insight-label">Legveszélyesebb Idősáv</span>
+                    <span class="insight-data trend-up">13:00 - 15:00</span>
+                </div>
+                <div class="insight-row">
+                    <span class="insight-label">Domináns Támadás</span>
+                    <span class="insight-data">Phishing (Email)</span>
+                </div>
+                <div class="insight-row">
+                    <span class="insight-label">Kockázati Szint</span>
+                    <span class="insight-data" style="color: var(--danger)">CRITICAL</span>
+                </div>
             </div>
         </div>
         
@@ -284,7 +326,7 @@
         const darkConfig = {
             "background": "transparent",
             "view": {"stroke": "transparent"},
-            "title": {"color": "#fff", "fontSize": 18, "anchor": "start"}, // Balra igazított cím
+            "title": {"color": "#fff", "fontSize": 18, "anchor": "start"},
             "style": {"guide-label": {"fill": "#94a3b8"}, "guide-title": {"fill": "#fff"}},
             "axis": {
                 "domainColor": "#334155", "gridColor": "#334155", "tickColor": "#334155", 
@@ -293,19 +335,21 @@
             "legend": {"labelColor": "#94a3b8", "titleColor": "#fff"}
         };
 
-        // --- 1. DASHBOARD SPEC (JAVÍTOTT MÉRETEZÉS) ---
+        // --- 1. DASHBOARD SPEC (SZÉLESSÉG IGAZÍTÁS) ---
+        // A TRÜKK: Az alsó két diagram összélességéhez igazítjuk a felsőt.
+        // Ha az alsók kb 400+400px, akkor a felső legyen kb 850px.
+        
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "autosize": {"type": "fit", "contains": "padding"}, // FONTOS: Ez segít a kitöltésben
-            "width": "container", // Ez mondja meg, hogy vegye át a szülő szélességét
+            "padding": 20,
             
             "vconcat": [
                 {
-                    // SCATTER PLOT
-                    "height": 350, 
-                    "width": "container", // Explicit szélesség
+                    // SCATTER PLOT: Fix szélességet adunk neki, ami megegyezik az alsók összegével
+                    "width": 850, 
+                    "height": 250, 
                     "title": "Idővonal és Költségek (Interaktív: Húzzon sávot!)",
                     "mark": "circle",
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
@@ -322,12 +366,14 @@
                     }
                 },
                 {
+                    // ALSÓ SZEKCIÓ
                     "columns": 2,
                     "resolve": {"scale": {"color": "independent"}},
+                    "spacing": 50, // Térköz a két alsó diagram között
                     "hconcat": [
                         {
                             // BAR CHART
-                            "width": 500, "height": 300,  // Növelt fix szélesség
+                            "width": 400, "height": 250, 
                             "title": "Típusok (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
@@ -339,7 +385,7 @@
                         },
                         {
                             // DONUT CHART
-                            "width": 500, "height": 300, // Növelt fix szélesség
+                            "width": 400, "height": 250, 
                             "title": "Részlegek (Szűrt)",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "arc", "innerRadius": 80},
@@ -354,13 +400,13 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (JAVÍTOTT) ---
+        // --- 2. HEATMAP SPEC ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
             "width": "container",
-            "height": 400, // Magasabb lett
+            "height": 350,
             "autosize": {"type": "fit", "contains": "padding"},
             
             "title": "Támadási Intenzitás (Nap vs Óra)",
@@ -368,9 +414,9 @@
             "encoding": {
                 "x": {
                     "field": "hour", 
-                    "type": "ordinal", // Ordinal fontos a diszkrét órákhoz
+                    "type": "ordinal", 
                     "title": "Óra (00-23)",
-                    "axis": {"labelAngle": 0} // Ne forgassa el a számokat
+                    "axis": {"labelAngle": 0}
                 },
                 "y": {
                     "field": "day", 
