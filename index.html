@@ -293,12 +293,31 @@
     </section>
 
     <section class="story-section">
-        <h2 class="section-title" style="border-color: var(--warning);">3. Global Threat Origins</h2>
-        <p class="section-desc">
-            A fenyegetések földrajzi eloszlása. Az adatok alapján a támadások jelentős része Kelet-Európából és Dél-Amerikából származik.
-            <br><em>(Vigye az egeret a piros körökre a részletekért!)</em>
-        </p>
-        <div class="viz-wrapper" id="viz-map"></div>
+        <div class="grid-2-col" style="margin-bottom: 30px;">
+            <div>
+                <h2 class="section-title" style="border-color: var(--warning);">3. Top Attack Origins</h2>
+                <p class="section-desc" style="padding-left: 0; margin-left: 25px;">
+                    Az IP-címek és digitális lábnyomok elemzése alapján azonosítottuk a támadások legfőbb forrásait.
+                    <br>A lista tisztán mutatja az államilag támogatott és szervezett bűnözői csoportok földrajzi dominanciáját.
+                </p>
+            </div>
+            
+            <div class="insight-card">
+                <div style="text-transform: uppercase; letter-spacing: 1px; color: var(--warning); margin-bottom: 20px; font-weight: 700; font-size: 0.9rem;">
+                    🌍 Geo-Location Report
+                </div>
+                <div class="insight-row">
+                    <span class="insight-label">Primary Source</span>
+                    <span class="insight-data">China (APT Groups)</span>
+                </div>
+                <div class="insight-row">
+                    <span class="insight-label">Total Countries</span>
+                    <span class="insight-data">5 Major Actors</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="viz-wrapper" id="viz-countries"></div>
     </section>
 
     <section class="story-section">
@@ -344,14 +363,8 @@
         const types = ['Phishing', 'Malware', 'DDoS', 'Ransomware', 'Social Eng'];
         const days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
         
-        // Térkép adatokhoz (Egyszerűsített koordináták régiók szerint)
-        const regions = [
-            {lat: 48, lon: 30, name: "Eastern Europe"},
-            {lat: 35, lon: 105, name: "Asia"},
-            {lat: -10, lon: -55, name: "South America"},
-            {lat: 55, lon: 37, name: "Russia"},
-            {lat: 40, lon: -100, name: "North America (Proxy)"}
-        ];
+        // Ország lista a térkép helyetti diagramhoz
+        const countries = ['China', 'Russia', 'North Korea', 'Brazil', 'Iran', 'Unknown Proxy'];
 
         for(let i=0; i<1200; i++) {
             const m = Math.floor(Math.random() * 12);
@@ -367,9 +380,16 @@
             let dept = depts[Math.floor(Math.random() * depts.length)];
             let type = types[Math.floor(Math.random() * types.length)];
             
-            if (m > 9 && Math.random() > 0.6) {
-                type = 'Ransomware';
-            }
+            // Ország generálás (súlyozott)
+            let randC = Math.random();
+            let country = 'Unknown Proxy';
+            if (randC < 0.3) country = 'China';
+            else if (randC < 0.55) country = 'Russia';
+            else if (randC < 0.7) country = 'Brazil';
+            else if (randC < 0.85) country = 'North Korea';
+            else if (randC < 0.95) country = 'Iran';
+
+            if (m > 9 && Math.random() > 0.6) type = 'Ransomware';
 
             let rand = Math.random();
             let severity = "Low";
@@ -384,15 +404,6 @@
                 cost *= 8;
             }
 
-            // --- JAVÍTOTT TÉRKÉP SZÓRÁS ---
-            // Itt volt a hiba: túl kicsi volt a szórás (random * 10).
-            // Megnöveljük, hogy szétterüljön a kontinensen.
-            let region = regions[Math.floor(Math.random() * regions.length)];
-            
-            // Nagyobb jitter (szórás) a földrajzi pontokhoz
-            let lat = region.lat + (Math.random() * 30 - 15); // +/- 15 fok szélességben
-            let lon = region.lon + (Math.random() * 50 - 25); // +/- 25 fok hosszúságban
-
             dataPoints.push({
                 date: dateObj.toISOString().split('T')[0],
                 yearmonth: dateObj.toISOString().slice(0, 7),
@@ -402,9 +413,7 @@
                 cost: cost,
                 day: days[dateObj.getDay() === 0 ? 6 : dateObj.getDay() - 1],
                 hour: finalHour,
-                lat: lat,
-                lon: lon,
-                origin: region.name
+                country: country // Új mező
             });
         }
 
@@ -421,11 +430,10 @@
                 "domainColor": "#334155", "gridColor": "rgba(51, 65, 85, 0.5)", "tickColor": "#334155", 
                 "labelColor": "#94a3b8", "titleColor": "#f8fafc"
             },
-            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff", "labelFontSize": 12},
-            "geoshape": {"fill": "#334155", "stroke": "#1e293b"}
+            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff", "labelFontSize": 12}
         };
 
-        // --- 1. DASHBOARD SPEC (1250px) ---
+        // --- 1. DASHBOARD SPEC ---
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
@@ -479,13 +487,12 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (Szélesített: 1150px) ---
+        // --- 2. HEATMAP SPEC ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
             "width": 1150, "height": 400,
-            
             "title": "Time Intensity Heatmap",
             "mark": {"type": "rect", "cornerRadius": 2},
             "encoding": {
@@ -496,39 +503,24 @@
             }
         };
 
-        // --- 3. GLOBAL THREAT MAP (Javított: Szórtabb és kisebb pontok) ---
-        const mapSpec = {
+        // --- 3. COUNTRY BAR CHART (A Térkép Helyett - BIZTOS MEGOLDÁS) ---
+        const countrySpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "width": 1150, "height": 500,
+            "data": { "values": dataPoints },
             "config": darkConfig,
-            "title": "Origin of Attacks",
-            "projection": {"type": "equalEarth"},
-            "layer": [
-                {
-                    // Alaptérkép
-                    "data": {"url": "https://raw.githubusercontent.com/vega/vega/master/docs/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
-                    "mark": {"type": "geoshape", "fill": "#334155", "stroke": "#1e293b"}
+            "width": 1150, "height": 300,
+            "title": "Top Source Countries (Ranked)",
+            "mark": {"type": "bar", "cornerRadiusEnd": 4},
+            "encoding": {
+                "y": {"field": "country", "type": "nominal", "sort": "-x", "title": null},
+                "x": {"aggregate": "count", "title": "Total Attacks"},
+                "color": {
+                    "field": "country",
+                    "scale": {"scheme": "reds"},
+                    "legend": null
                 },
-                {
-                    // Pontok
-                    "data": {"values": dataPoints},
-                    "mark": {
-                        "type": "circle", 
-                        "color": "#ef4444", 
-                        "opacity": 0.4 // Kisebb átlátszóság a sűrűség érzékeltetésére
-                    },
-                    "encoding": {
-                        "longitude": {"field": "lon", "type": "quantitative"},
-                        "latitude": {"field": "lat", "type": "quantitative"},
-                        "size": {
-                            // Dinamikus méret: Ha drága a támadás, nagyobb a pötty
-                            "condition": {"test": "datum['cost'] > 2500", "value": 60},
-                            "value": 20 // Alapból kicsi pöttyök, hogy ne legyen "tégla"
-                        },
-                        "tooltip": [{"field": "origin", "title": "Region"}, {"field": "type", "title": "Type"}]
-                    }
-                }
-            ]
+                "tooltip": [{"field": "country", "title": "Origin"}, {"aggregate": "count", "title": "Attacks"}]
+            }
         };
 
         // --- 4. STREAMGRAPH ---
@@ -555,7 +547,7 @@
 
         vegaEmbed('#viz-main', mainSpec, {actions: false});
         vegaEmbed('#viz-heatmap', heatSpec, {actions: false});
-        vegaEmbed('#viz-map', mapSpec, {actions: false});
+        vegaEmbed('#viz-countries', countrySpec, {actions: false});
         vegaEmbed('#viz-stream', streamSpec, {actions: false});
 
     </script>
