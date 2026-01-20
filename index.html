@@ -22,7 +22,6 @@
             --accent-glow: rgba(56, 189, 248, 0.3);
             --danger: #ef4444;        
             --success: #10b981;       
-            --warning: #f59e0b;
             --grid-line: #334155;     
         }
 
@@ -385,10 +384,14 @@
                 cost *= 8;
             }
 
-            // Térkép adat
+            // --- JAVÍTOTT TÉRKÉP SZÓRÁS ---
+            // Itt volt a hiba: túl kicsi volt a szórás (random * 10).
+            // Megnöveljük, hogy szétterüljön a kontinensen.
             let region = regions[Math.floor(Math.random() * regions.length)];
-            let lat = region.lat + (Math.random() * 10 - 5);
-            let lon = region.lon + (Math.random() * 20 - 10);
+            
+            // Nagyobb jitter (szórás) a földrajzi pontokhoz
+            let lat = region.lat + (Math.random() * 30 - 15); // +/- 15 fok szélességben
+            let lon = region.lon + (Math.random() * 50 - 25); // +/- 25 fok hosszúságban
 
             dataPoints.push({
                 date: dateObj.toISOString().split('T')[0],
@@ -476,7 +479,7 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (Szélesítve: 1150px) ---
+        // --- 2. HEATMAP SPEC (Szélesített: 1150px) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
@@ -493,38 +496,36 @@
             }
         };
 
-        // --- 3. GLOBAL THREAT MAP (Javított Forrás & Interakció) ---
+        // --- 3. GLOBAL THREAT MAP (Javított: Szórtabb és kisebb pontok) ---
         const mapSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "width": 1150, "height": 500,
             "config": darkConfig,
             "title": "Origin of Attacks",
-            "projection": {"type": "equalEarth"}, // Szebb vetület
+            "projection": {"type": "equalEarth"},
             "layer": [
                 {
-                    // Stabil GitHub forrás a térképhez
+                    // Alaptérkép
                     "data": {"url": "https://raw.githubusercontent.com/vega/vega/master/docs/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
                     "mark": {"type": "geoshape", "fill": "#334155", "stroke": "#1e293b"}
                 },
                 {
+                    // Pontok
                     "data": {"values": dataPoints},
-                    "mark": {"type": "circle", "color": "#ef4444", "opacity": 0.6},
+                    "mark": {
+                        "type": "circle", 
+                        "color": "#ef4444", 
+                        "opacity": 0.4 // Kisebb átlátszóság a sűrűség érzékeltetésére
+                    },
                     "encoding": {
                         "longitude": {"field": "lon", "type": "quantitative"},
                         "latitude": {"field": "lat", "type": "quantitative"},
                         "size": {
-                            "condition": {"test": "datum['cost'] > 2000", "value": 150},
-                            "value": 50
-                        },
-                        // Interaktivitás: Ha ráviszed az egeret, megnő
-                        "opacity": {
-                            "condition": {"selection": "hover", "value": 1},
-                            "value": 0.5
+                            // Dinamikus méret: Ha drága a támadás, nagyobb a pötty
+                            "condition": {"test": "datum['cost'] > 2500", "value": 60},
+                            "value": 20 // Alapból kicsi pöttyök, hogy ne legyen "tégla"
                         },
                         "tooltip": [{"field": "origin", "title": "Region"}, {"field": "type", "title": "Type"}]
-                    },
-                    "selection": {
-                        "hover": {"type": "point", "on": "mouseover"}
                     }
                 }
             ]
