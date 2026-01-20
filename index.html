@@ -22,6 +22,7 @@
             --accent-glow: rgba(56, 189, 248, 0.3);
             --danger: #ef4444;        
             --success: #10b981;       
+            --warning: #f59e0b;
             --grid-line: #334155;     
         }
 
@@ -107,7 +108,7 @@
         .story-section {
             width: 92%;
             max-width: 1600px;
-            margin: 140px auto;
+            margin: 140px auto; /* Távolság a szekciók között */
         }
 
         .section-title {
@@ -272,7 +273,7 @@
             
             <div class="insight-card">
                 <div style="text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 20px; font-weight: 700; font-size: 0.9rem;">
-                    ⚠️ AI Threat Analysis (Automated)
+                    ⚠️ AI Threat Analysis
                 </div>
                 <div class="insight-row">
                     <span class="insight-label">High Risk Window</span>
@@ -293,7 +294,25 @@
     </section>
 
     <section class="story-section">
-        <h2 class="section-title" style="border-color: var(--success);">3. Strategic Action Plan</h2>
+        <h2 class="section-title" style="border-color: var(--warning);">3. Global Threat Origins</h2>
+        <p class="section-desc">
+            A fenyegetések földrajzi eloszlása. Az adatok alapján a támadások jelentős része Kelet-Európából és Dél-Amerikából származik,
+            ami szervezett kiberbűnözői csoportokra utal.
+        </p>
+        <div class="viz-wrapper" id="viz-map"></div>
+    </section>
+
+    <section class="story-section">
+        <h2 class="section-title" style="border-color: #8b5cf6;">4. Attack Evolution (Streamgraph)</h2>
+        <p class="section-desc">
+            A támadási típusok alakulása az év során. Jól látható, hogy év végén (Q4) a <strong>Ransomware</strong> (zsarolóvírus)
+            támadások száma drasztikusan megemelkedett.
+        </p>
+        <div class="viz-wrapper" id="viz-stream"></div>
+    </section>
+
+    <section class="story-section">
+        <h2 class="section-title" style="border-color: var(--success);">5. Strategic Action Plan</h2>
         <div class="conclusion-grid">
             <div class="action-card" style="--border-color: var(--accent)">
                 <span class="action-icon">🛡️</span>
@@ -325,8 +344,18 @@
         const depts = ['IT', 'HR', 'Finance', 'Sales', 'Marketing'];
         const types = ['Phishing', 'Malware', 'DDoS', 'Ransomware', 'Social Eng'];
         const days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
+        
+        // Térkép adatokhoz (Egyszerűsített koordináták régiók szerint)
+        // Ezek szimulálják, honnan jön a támadás
+        const regions = [
+            {lat: 48, lon: 30, name: "Eastern Europe"},
+            {lat: 35, lon: 105, name: "Asia"},
+            {lat: -10, lon: -55, name: "South America"},
+            {lat: 55, lon: 37, name: "Russia"},
+            {lat: 40, lon: -100, name: "North America (Proxy)"}
+        ];
 
-        for(let i=0; i<1000; i++) {
+        for(let i=0; i<1200; i++) { // Több adat a jobb streamgraph-hoz
             const m = Math.floor(Math.random() * 12);
             const d = Math.floor(Math.random() * 28) + 1;
             const hour = Math.floor(Math.random() * 24);
@@ -340,6 +369,11 @@
             let dept = depts[Math.floor(Math.random() * depts.length)];
             let type = types[Math.floor(Math.random() * types.length)];
             
+            // Streamgraph sztori: Ransomware év végén durvul
+            if (m > 9 && Math.random() > 0.6) {
+                type = 'Ransomware';
+            }
+
             let rand = Math.random();
             let severity = "Low";
             if (rand > 0.4) severity = "Medium"; 
@@ -353,24 +387,33 @@
                 cost *= 8;
             }
 
+            // Térkép adat (Véletlenszerű forrás)
+            let region = regions[Math.floor(Math.random() * regions.length)];
+            // Kis szórás, hogy ne egy pontban legyenek
+            let lat = region.lat + (Math.random() * 10 - 5);
+            let lon = region.lon + (Math.random() * 20 - 10);
+
             dataPoints.push({
                 date: dateObj.toISOString().split('T')[0],
+                yearmonth: dateObj.toISOString().slice(0, 7), // YYYY-MM a streamgraph-hoz
                 department: dept,
                 type: type,
                 severity: severity,
                 cost: cost,
                 day: days[dateObj.getDay() === 0 ? 6 : dateObj.getDay() - 1],
-                hour: finalHour
+                hour: finalHour,
+                lat: lat,
+                lon: lon,
+                origin: region.name
             });
         }
 
-        // --- CONFIG (Better Fonts) ---
+        // --- CONFIG ---
         const darkConfig = {
             "background": "transparent",
             "view": {"stroke": "transparent"},
             "title": {"color": "#fff", "fontSize": 20, "anchor": "start", "offset": 20},
             "style": {
-                // Alapértelmezett sans-serif font az Inter helyett az ábrákon (jobb olvashatóság)
                 "guide-label": {"fill": "#94a3b8", "fontSize": 12}, 
                 "guide-title": {"fill": "#fff", "fontWeight": "bold", "fontSize": 14}
             },
@@ -378,26 +421,25 @@
                 "domainColor": "#334155", "gridColor": "rgba(51, 65, 85, 0.5)", "tickColor": "#334155", 
                 "labelColor": "#94a3b8", "titleColor": "#f8fafc"
             },
-            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff", "labelFontSize": 12}
+            "legend": {"labelColor": "#94a3b8", "titleColor": "#fff", "labelFontSize": 12},
+            // Térkép specifikus config
+            "geoshape": {"fill": "#334155", "stroke": "#1e293b"}
         };
 
-        // --- 1. DASHBOARD SPEC (1250px) ---
+        // --- 1. DASHBOARD SPEC ---
         const mainSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
             "padding": 10,
-            
             "vconcat": [
                 {
-                    // FELSŐ
-                    "width": 1250, 
-                    "height": 280, 
-                    "title": "Idővonal és Költségek (2025)",
+                    "width": 1250, "height": 280, 
+                    "title": "Timeline & Costs",
                     "mark": {"type": "circle", "opacity": 0.8},
                     "selection": {"brush": {"type": "interval", "encodings": ["x"]}},
                     "encoding": {
-                        "x": {"field": "date", "type": "temporal", "title": null, "axis": {"format": "%Y %b", "tickCount": 12}},
+                        "x": {"field": "date", "type": "temporal", "title": null},
                         "y": {"field": "cost", "type": "quantitative", "title": "Cost ($)"},
                         "color": {
                             "field": "severity",
@@ -409,14 +451,10 @@
                     }
                 },
                 {
-                    // ALSÓ SZEKCIÓ
-                    "columns": 2,
-                    "resolve": {"scale": {"color": "independent"}},
-                    "spacing": 50,
+                    "columns": 2, "resolve": {"scale": {"color": "independent"}}, "spacing": 50,
                     "hconcat": [
                         {
-                            "width": 600, "height": 250, 
-                            "title": "Típusok szerinti eloszlás",
+                            "width": 600, "height": 250, "title": "Attack Types",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "bar", "cornerRadiusEnd": 4},
                             "encoding": {
@@ -426,17 +464,12 @@
                             }
                         },
                         {
-                            "width": 600, "height": 250, 
-                            "title": "Érintett Részlegek",
+                            "width": 600, "height": 250, "title": "Departments Impacted",
                             "transform": [{"filter": {"selection": "brush"}}],
                             "mark": {"type": "arc", "innerRadius": 90, "outerRadius": 120},
                             "encoding": {
                                 "theta": {"aggregate": "count", "field": "department"},
-                                "color": {
-                                    "field": "department", 
-                                    "title": "Department", /* Címke nagybetűsítése */
-                                    "scale": {"scheme": "category10"}
-                                },
+                                "color": {"field": "department", "title": "Department", "scale": {"scheme": "category10"}},
                                 "tooltip": [{"field": "department"}, {"aggregate": "count"}]
                             }
                         }
@@ -445,44 +478,72 @@
             ]
         };
 
-        // --- 2. HEATMAP SPEC (1150px - Szélesített, de arányos) ---
+        // --- 2. HEATMAP SPEC (900px széles kockák) ---
         const heatSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "values": dataPoints },
             "config": darkConfig,
-            "width": 1150, 
-            "height": 400,
-            
-            "title": "Támadási Intenzitás Hőtérkép",
+            "width": 900, "height": 380,
+            "title": "Time Intensity Heatmap",
             "mark": {"type": "rect", "cornerRadius": 2},
             "encoding": {
-                "x": {
-                    "field": "hour", 
-                    "type": "ordinal", 
-                    "title": "Hour (00-23)",
-                    "axis": {"labelAngle": 0}
-                },
-                "y": {
-                    "field": "day", 
-                    "type": "nominal", 
-                    "title": null, 
-                    "sort": ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"]
-                },
-                "color": {
-                    "aggregate": "count",
-                    "title": "Incidents", /* Angol, mert az Hour is angol */
-                    "scale": {"scheme": "inferno"}
-                },
-                "tooltip": [
-                    {"field": "day", "title": "Nap"},
-                    {"field": "hour", "title": "Óra"},
-                    {"aggregate": "count", "title": "Darab"}
-                ]
+                "x": {"field": "hour", "type": "ordinal", "title": "Hour (00-23)", "axis": {"labelAngle": 0}},
+                "y": {"field": "day", "type": "nominal", "title": null, "sort": ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"]},
+                "color": {"aggregate": "count", "title": "Incidents", "scale": {"scheme": "inferno"}},
+                "tooltip": [{"field": "day", "title": "Nap"}, {"field": "hour", "title": "Óra"}, {"aggregate": "count", "title": "Darab"}]
             }
         };
 
-        vegaEmbed('#viz-main', mainSpec, {actions: false}).catch(console.error);
-        vegaEmbed('#viz-heatmap', heatSpec, {actions: false}).catch(console.error);
+        // --- 3. GLOBAL THREAT MAP (ÚJ!) ---
+        const mapSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": 1150, "height": 500,
+            "config": darkConfig,
+            "title": "Origin of Attacks",
+            "layer": [
+                {
+                    "data": {"url": "https://unpkg.com/world-atlas@1/world/110m.json", "format": {"type": "topojson", "feature": "countries"}},
+                    "mark": {"type": "geoshape", "fill": "#1e293b", "stroke": "#334155"}
+                },
+                {
+                    "data": {"values": dataPoints},
+                    "mark": {"type": "circle", "opacity": 0.6, "color": "#ef4444"},
+                    "encoding": {
+                        "longitude": {"field": "lon", "type": "quantitative"},
+                        "latitude": {"field": "lat", "type": "quantitative"},
+                        "size": {"value": 60}, // Fix méret, pöttyök
+                        "tooltip": [{"field": "origin", "title": "Region"}, {"field": "type", "title": "Type"}]
+                    }
+                }
+            ]
+        };
+
+        // --- 4. STREAMGRAPH (ÚJ!) ---
+        const streamSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "data": { "values": dataPoints },
+            "config": darkConfig,
+            "width": 1150, "height": 350,
+            "title": "Attack Trends Evolution (Monthly)",
+            "mark": "area",
+            "encoding": {
+                "x": {
+                    "field": "date", "type": "temporal", "timeUnit": "yearmonth", 
+                    "axis": {"domain": false, "format": "%Y %b", "tickSize": 0}
+                },
+                "y": {
+                    "aggregate": "count", "title": "Volume", 
+                    "stack": "center", "axis": null
+                },
+                "color": {"field": "type", "scale": {"scheme": "plasma"}, "title": "Type"},
+                "tooltip": [{"field": "type"}, {"aggregate": "count"}]
+            }
+        };
+
+        vegaEmbed('#viz-main', mainSpec, {actions: false});
+        vegaEmbed('#viz-heatmap', heatSpec, {actions: false});
+        vegaEmbed('#viz-map', mapSpec, {actions: false});
+        vegaEmbed('#viz-stream', streamSpec, {actions: false});
 
     </script>
 </body>
